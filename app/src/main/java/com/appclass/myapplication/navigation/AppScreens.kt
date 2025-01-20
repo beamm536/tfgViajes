@@ -1,4 +1,7 @@
 package com.appclass.myapplication.navigation
 
-class AppScreens {
+sealed class AppScreens(val ruta: String) {
+
+    object Login: AppScreens("Login")
+    object Registro: AppScreens("Registro")
 }
