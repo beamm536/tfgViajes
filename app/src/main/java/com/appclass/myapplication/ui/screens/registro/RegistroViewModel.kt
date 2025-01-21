@@ -1,4 +1,6 @@
 package com.appclass.myapplication.ui.screens.registro
 
-class RegistroViewModel {
+import androidx.lifecycle.ViewModel
+
+class RegistroViewModel: ViewModel() {
 }

@@ -8,14 +8,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
+import com.appclass.myapplication.ui.screens.registro.Registro
+import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 
 @Composable
 fun NavigationWrapper (navController: NavHostController) {
 
     val navController = rememberNavController()
     val loginViewModel: LoginViewModel = viewModel()
+    val registroViewModel: RegistroViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Login.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Registro.ruta){
 
         composable(AppScreens.Login.ruta){
             /**
@@ -24,6 +27,13 @@ fun NavigationWrapper (navController: NavHostController) {
             Login(
                 viewModel = loginViewModel,
                 navigateToHome = { /*navController.navigate()*/ }
+            )
+        }
+
+        composable(AppScreens.Registro.ruta){
+            Registro(
+                viewModel = registroViewModel,
+                navigateToHome = {/*todo --> navegacion entre pantallas sin qe me de error :)*/}
             )
         }
     }
