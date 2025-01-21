@@ -40,11 +40,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.appclass.myapplication.R
+import com.appclass.myapplication.data.repository.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
 
 @Composable
-fun Login(viewModel: LoginViewModel, navigateToHome: () -> Unit){
+fun Login(viewModel: LoginViewModel, authViewModel: AuthViewModel, navigateToHome: () -> Unit){
 //    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 //        Spacer(modifier = Modifier.weight(1f))
 //        Text(text = "LOGIN SCREEN", fontSize = 25.sp)
@@ -123,9 +124,15 @@ fun LoginBodyScreen(/*viewModel: LoginViewModel, email:String, onTextFieldChange
 //            Text("Sign Up", fontSize = 18.sp, color = Color.Gray)
 //        }
 
+    /** SWITCH --> CON VARIABLES COMPARTIDAS - AUTHVIEWMODEL */
         //llamada al switch de LOGIN y SIGNUP
-        var selected by remember { mutableStateOf(true) }
-        LoginSignUpSwitcher(selected = selected, onSelectionChanged = { selected = it })
+        //var selected by remember { mutableStateOf(true) }
+        LoginSignUpSwitcher(
+            selected = authViewModel.isLoginSelected.value,
+            onSelectionChanged = { authViewModel.toggleSelection(it) }
+//            selected = selected,
+//            onSelectionChanged = { selected = it }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
