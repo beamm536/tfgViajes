@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -129,6 +133,7 @@ fun LoginBodyScreen(/*viewModel: LoginViewModel, email:String, onTextFieldChange
             value = "",//email,
             onValueChange = { /*onTextFieldChanged(it)*/ },
             label = { Text("Email") },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -137,6 +142,7 @@ fun LoginBodyScreen(/*viewModel: LoginViewModel, email:String, onTextFieldChange
             value = "",
             onValueChange = {  },
             label = { Text("Password") },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
 //            trailingIcon = {
@@ -165,7 +171,30 @@ fun LoginBodyScreen(/*viewModel: LoginViewModel, email:String, onTextFieldChange
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Or login with", modifier = Modifier.align(Alignment.CenterHorizontally))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Divider(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Or login with",
+                //modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Divider(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
@@ -173,7 +202,18 @@ fun LoginBodyScreen(/*viewModel: LoginViewModel, email:String, onTextFieldChange
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(Color.White)
         ) {
-            Text("Continue with Google", color = txtBlack)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp) //spacedBy --> espacio entre el icono y el txt del btn
+            ){
+                Image(
+                    painter = painterResource(R.drawable.google_logintfg),
+                    contentDescription = "icono google - metodo autenticacion",
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+                Text("Continue with Google", color = txtBlack)
+            }
+
         }
     }
 }
