@@ -28,15 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.appclass.myapplication.R
-import com.appclass.myapplication.data.repository.AuthViewModel
-import com.appclass.myapplication.ui.screens.login.FuncionesLogin
-import com.appclass.myapplication.ui.screens.login.LoginViewModel
+import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
-import kotlinx.coroutines.selects.select
 
 @Composable
-fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit){
+fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher: @Composable () -> Unit){
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -53,6 +50,7 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit){
             //las llamadas al resto de funciones las haremos en FuncionesLogin
             FuncionesRegistro(
                 viewModel = viewModel,
+                switcher = switcher,
                 onLoginSuccess = navigateToHome
             )
         }
@@ -79,7 +77,7 @@ fun TxtsInicioRegistro(){
 }
 
 @Composable
-fun ChangeViewToggleSwitch(viewModel: AuthViewModel ,onSelectionChanged: (Boolean) -> Unit){
+fun ChangeViewToggleSwitch(viewModel: AuthViewModel, onSelectionChanged: (Boolean) -> Unit){
 
     //por el momento creamos la variable para comprobar cual es la ventana que esta seleccionada, y asi cambiar de vista
     var selected by remember { mutableStateOf(true) }
@@ -125,7 +123,11 @@ fun ChangeViewToggleSwitch(viewModel: AuthViewModel ,onSelectionChanged: (Boolea
 
 
 @Composable
-fun FuncionesRegistro(viewModel: RegistroViewModel, onLoginSuccess: () -> Unit){
+fun FuncionesRegistro(
+    viewModel: RegistroViewModel,
+    switcher: @Composable () -> Unit,
+    onLoginSuccess: () -> Unit
+){
 
     Column(
         modifier = Modifier
@@ -135,6 +137,7 @@ fun FuncionesRegistro(viewModel: RegistroViewModel, onLoginSuccess: () -> Unit){
     ){
         LogoAppRegistro(modifier = Modifier)
         TxtsInicioRegistro()
-        ChangeViewToggleSwitch(onSelectionChanged = { var selected = it })
+        switcher()
+       // ChangeViewToggleSwitch(onSelectionChanged = { /*var selected = it*/ })
     }
 }
