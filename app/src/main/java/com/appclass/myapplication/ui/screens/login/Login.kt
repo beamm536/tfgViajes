@@ -237,6 +237,5 @@ fun FuncionesLogin(
             loginEnable = loginEnable,
             onLoginSelected = { viewModel.onLoginSelected() }
         )
-
     }
 }
