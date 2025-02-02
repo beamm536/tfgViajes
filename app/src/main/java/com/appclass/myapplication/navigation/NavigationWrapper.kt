@@ -14,11 +14,11 @@ import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 @Composable
 fun NavigationWrapper (navController: NavHostController) {
 
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
     val loginViewModel: LoginViewModel = viewModel()
     val registroViewModel: RegistroViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Registro.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Login.ruta){
 
         composable(AppScreens.Login.ruta){
             /**
@@ -26,7 +26,7 @@ fun NavigationWrapper (navController: NavHostController) {
              */
             Login(
                 viewModel = loginViewModel,
-                navigateToHome = { /*navController.navigate()*/ }
+                navigateToHome = { navController.navigate(AppScreens.Registro.ruta) }
             )
         }
 

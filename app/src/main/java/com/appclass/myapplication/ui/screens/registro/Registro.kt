@@ -135,6 +135,6 @@ fun FuncionesRegistro(viewModel: RegistroViewModel, onLoginSuccess: () -> Unit){
     ){
         LogoAppRegistro(modifier = Modifier)
         TxtsInicioRegistro()
-        ChangeViewToggleSwitch(onSelectionChanged = { var selected = it })
+       // ChangeViewToggleSwitch(onSelectionChanged = { /*var selected = it*/ })
     }
 }
