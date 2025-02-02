@@ -40,11 +40,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.appclass.myapplication.R
+import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
 
 @Composable
-fun Login(viewModel: LoginViewModel,/* authViewModel: AuthViewModel,*/ navigateToHome: () -> Unit){
+fun Login(viewModel: LoginViewModel, navigateToHome: () -> Unit, switcher: @Composable () -> Unit){
 
     //DECLARACION DE LAS VARIABLES DE ESETADO DEL VIEWMODEL
     val email: String by viewModel.email.observeAsState(initial = "")
@@ -67,6 +68,7 @@ fun Login(viewModel: LoginViewModel,/* authViewModel: AuthViewModel,*/ navigateT
             //las llamadas al resto de funciones las haremos en FuncionesLogin
             FuncionesLogin(
                 viewModel = viewModel,
+                switcher = switcher,
                 email = email,
                 password = password,
                 loginEnable = loginEnable,
@@ -98,7 +100,7 @@ fun TxtsInicio(){
 }
 
 @Composable
-fun LoginBodyScreen(email: String,  onEmailChanged: (String) -> Unit,password: String, onPasswordChanged: (String) -> Unit, loginEnable: Boolean, onLoginSelected: () -> Unit){
+fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged: (String) -> Unit, password: String, onPasswordChanged: (String) -> Unit, loginEnable: Boolean, onLoginSelected: () -> Unit){
 
 
 
@@ -128,6 +130,7 @@ fun LoginBodyScreen(email: String,  onEmailChanged: (String) -> Unit,password: S
 //            selected = selected,
 //            onSelectionChanged = { selected = it }
 //        )
+       // LoginSignUpSwitcher(authViewModel = authViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -221,47 +224,54 @@ fun LoginBodyScreen(email: String,  onEmailChanged: (String) -> Unit,password: S
     }
 }
 
-@Composable
-fun LoginSignUpSwitcher(selected: Boolean, onSelectionChanged: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(Color(0xFFF0F0F5), shape = RoundedCornerShape(25.dp))
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Button(
-            onClick = { onSelectionChanged(true) },
-            colors = ButtonDefaults.buttonColors(
-                if (selected) Color.White else Color.Transparent,
-                contentColor = Color.Black
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .height(42.dp),
-            shape = RoundedCornerShape(25.dp),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-        ) {
-            Text("Log In")
-        }
-
-        Button(
-            onClick = { onSelectionChanged(false) },
-            colors = ButtonDefaults.buttonColors(
-                if (!selected) Color.White else Color.Transparent,
-                contentColor = txtBlack
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .height(42.dp),
-            shape = RoundedCornerShape(25.dp),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-        ) {
-            Text("Sign Up")
-        }
-    }
-}
+//@Composable
+//fun LoginSignUpSwitcher(authViewModel: AuthViewModel) { //con esto recibe toggleSelection
+//
+//    //LOGIN --> true || REGISTRO --> false
+//    val isLoginSelected: Boolean by authViewModel.isLoginSelected.observeAsState(initial = true)
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(50.dp)
+//            .background(Color(0xFFF0F0F5), shape = RoundedCornerShape(25.dp))
+//            .padding(4.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween
+//    ) {
+//
+//        //CUANDO ESTAMOS EN LOGIN, NOS REDIRIGE AL REGISTRO --> ESTANDO EN TRUE
+//        Button(
+//            onClick = { authViewModel.toggleSelection(true) },
+//            colors = ButtonDefaults.buttonColors(
+//                if (isLoginSelected) Color.White else Color.Transparent,
+//                contentColor = Color.Black
+//            ),
+//            modifier = Modifier
+//                .weight(1f)
+//                .height(42.dp),
+//            shape = RoundedCornerShape(25.dp),
+//            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+//        ) {
+//            Text("Log In")
+//        }
+//
+//        //CUANDO ESTAMOS EN REGISTRO, NOS REDIRIGE AL LOGIN --> ESTANDO EN FALSE
+//        Button(
+//            onClick = { authViewModel.toggleSelection(false) },
+//            colors = ButtonDefaults.buttonColors(
+//                if (!isLoginSelected) Color.White else Color.Transparent,
+//                contentColor = txtBlack
+//            ),
+//            modifier = Modifier
+//                .weight(1f)
+//                .height(42.dp),
+//            shape = RoundedCornerShape(25.dp),
+//            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+//        ) {
+//            Text("Sign Up")
+//        }
+//    }
+//}
 
 @Composable
 fun FuncionesLogin(
@@ -271,6 +281,7 @@ fun FuncionesLogin(
 //    loginEnable: Boolean,
 //    onLoginSelected: () -> Unit
     viewModel: LoginViewModel,
+    switcher: @Composable () -> Unit,
     email: String,
     password: String,
     onLoginSuccess: () -> Unit,
@@ -286,10 +297,12 @@ fun FuncionesLogin(
     ){
         LogoAppLogin(modifier = Modifier)
         TxtsInicio()
+        switcher()
         //para la recarga y comprobacion constante de los datos, desde que el programa nota q el usuario esta realizando cambios
         //LoginBodyScreen(email,password, {viewModel.onLoginChange(it)}, loginEnable, {viewModel.onLoginSelected()}) //onLoginChange --> en LoginViewModel
         //LoginBodyScreen(email, password, {viewModel.onLoginChange(it)}, loginEnable, {viewModel.onLoginSelected()})
         LoginBodyScreen(
+            authViewModel = AuthViewModel(),
             email = email,
             onEmailChanged = { viewModel.onEmailChanged(it) }, // Llamada correcta para email
             password = password,
