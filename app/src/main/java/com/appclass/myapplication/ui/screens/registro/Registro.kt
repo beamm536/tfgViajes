@@ -173,14 +173,16 @@ fun CamposRegistro(
             shape = RoundedCornerShape(12.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-//            trailingIcon = {
-//                IconButton1(onClick = { passwordVisible = !passwordVisible }) {
-//                    Icon(
-//                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Outlined.,
-//                        contentDescription = "Toggle Password Visibility"
-//                    )
-//                }
-//            },
+          trailingIcon = {
+                IconButton1(onClick = { passwordVisible = !passwordVisible }) {
+                    Image(
+                        painter = painterResource(id = if (!passwordVisible) R.drawable.visibility_off else R.drawable.visibility_on),
+                        contentDescription = if (passwordVisible) "oculto" else "mostrado",
+                        modifier = Modifier.size(20.dp)
+
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
