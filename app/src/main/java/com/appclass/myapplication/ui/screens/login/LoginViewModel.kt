@@ -4,6 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.appclass.myapplication.data.AuthRepository
 
 class LoginViewModel: ViewModel(){
 
@@ -37,5 +38,15 @@ class LoginViewModel: ViewModel(){
     private fun isValidPassword(password: String): Boolean = password.length >= 6
 
     fun onLoginSelected() {}
+
+
+//--------------------------------------------------------------
+
+    private val authRepository = AuthRepository()
+
+    fun inciarSesion(email: String, password: String, callback: (Boolean, String?) -> Unit){
+        //llamamos a la funcion YA CREADA de nuestra clase AuthRepository
+        authRepository.iniciarSesion(email, password, callback)
+    }
 
 }

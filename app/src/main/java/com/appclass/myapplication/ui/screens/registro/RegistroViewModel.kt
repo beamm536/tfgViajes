@@ -4,6 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.appclass.myapplication.data.AuthRepository
 
 class RegistroViewModel: ViewModel() {
 
@@ -69,4 +70,16 @@ class RegistroViewModel: ViewModel() {
        2.- funcion de verficacion de fecha de nacimiento
        3.- funcion de habilitar el boton de registro
      */
+
+
+
+//--------------------------------------------------------------
+
+    private val authRepository = AuthRepository()
+
+    fun registrarUsuaario(nombre: String, apellidos: String, fechaNacimiento: String, email: String, password: String, callback: (Boolean, String?) -> Unit){
+        //llamamos a la funcion YA CREADA de nuestra clase AuthRepository
+        authRepository.registrarUsuario(nombre, apellidos, fechaNacimiento, email, password, callback)
+    }
+
 }

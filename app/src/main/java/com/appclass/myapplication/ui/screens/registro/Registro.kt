@@ -186,13 +186,13 @@ fun CamposRegistro(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Button(
-            onClick = { /**/ },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors( Color.Blue)
-        ) {
-            Text("Register", color = Color.White)
-        }
+//        Button(
+//            onClick = { /**/ },
+//            modifier = Modifier.fillMaxWidth(),
+//            colors = ButtonDefaults.buttonColors( Color.Blue)
+//        ) {
+//            Text("Register", color = Color.White)
+//        }
     }
 }
 
@@ -234,5 +234,24 @@ fun FuncionesRegistro(
             registroEnable = registroEnable
         )
        // ChangeViewToggleSwitch(onSelectionChanged = { /*var selected = it*/ })
+        Button(
+            onClick = {
+                viewModel.registrarUsuaario(
+                    nombre, apellidos, fechaNacimiento, email, password
+                ) { success, errorMessage ->
+                    if (success) {
+                        onLoginSuccess() // Navegar a Home
+                    } else {
+                        // TODO: Mostrar mensaje de error en la UI
+                        println("Error: $errorMessage")
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = registroEnable,
+            colors = ButtonDefaults.buttonColors(Color.Blue)
+        ) {
+            Text("Registrarse", color = Color.White)
+        }
     }
 }
