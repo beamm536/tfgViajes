@@ -102,13 +102,7 @@ fun TxtsInicio(){
 @Composable
 fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged: (String) -> Unit, password: String, onPasswordChanged: (String) -> Unit, loginEnable: Boolean, onLoginSelected: () -> Unit){
 
-
-
-    //con esto enganchamos la variable instanciada en el ViewModel con la ui
-    //val email: String by viewModel.email.observeAsState(initial = "")
-
     var passwordVisible by remember { mutableStateOf(false) }
-
 
     Column(
         modifier = Modifier
@@ -116,22 +110,6 @@ fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged:
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-//        Row(modifier = Modifier.fillMaxWidth()) {
-//            Text("Log In", fontSize = 18.sp, modifier = Modifier.weight(1f))
-//            Text("Sign Up", fontSize = 18.sp, color = Color.Gray)
-//        }
-
-    /** SWITCH --> CON VARIABLES COMPARTIDAS - AUTHVIEWMODEL */
-        //llamada al switch de LOGIN y SIGNUP
-//        //var selected by remember { mutableStateOf(true) }
-//        LoginSignUpSwitcher(
-//            selected = authViewModel.isLoginSelected.value,
-//            onSelectionChanged = { authViewModel.toggleSelection(it) }
-//            selected = selected,
-//            onSelectionChanged = { selected = it }
-//        )
-       // LoginSignUpSwitcher(authViewModel = authViewModel)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
@@ -224,62 +202,9 @@ fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged:
     }
 }
 
-//@Composable
-//fun LoginSignUpSwitcher(authViewModel: AuthViewModel) { //con esto recibe toggleSelection
-//
-//    //LOGIN --> true || REGISTRO --> false
-//    val isLoginSelected: Boolean by authViewModel.isLoginSelected.observeAsState(initial = true)
-//
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(50.dp)
-//            .background(Color(0xFFF0F0F5), shape = RoundedCornerShape(25.dp))
-//            .padding(4.dp),
-//        horizontalArrangement = Arrangement.SpaceBetween
-//    ) {
-//
-//        //CUANDO ESTAMOS EN LOGIN, NOS REDIRIGE AL REGISTRO --> ESTANDO EN TRUE
-//        Button(
-//            onClick = { authViewModel.toggleSelection(true) },
-//            colors = ButtonDefaults.buttonColors(
-//                if (isLoginSelected) Color.White else Color.Transparent,
-//                contentColor = Color.Black
-//            ),
-//            modifier = Modifier
-//                .weight(1f)
-//                .height(42.dp),
-//            shape = RoundedCornerShape(25.dp),
-//            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-//        ) {
-//            Text("Log In")
-//        }
-//
-//        //CUANDO ESTAMOS EN REGISTRO, NOS REDIRIGE AL LOGIN --> ESTANDO EN FALSE
-//        Button(
-//            onClick = { authViewModel.toggleSelection(false) },
-//            colors = ButtonDefaults.buttonColors(
-//                if (!isLoginSelected) Color.White else Color.Transparent,
-//                contentColor = txtBlack
-//            ),
-//            modifier = Modifier
-//                .weight(1f)
-//                .height(42.dp),
-//            shape = RoundedCornerShape(25.dp),
-//            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-//        ) {
-//            Text("Sign Up")
-//        }
-//    }
-//}
 
 @Composable
 fun FuncionesLogin(
-//    viewModel: LoginViewModel,
-//    email: String,
-//    password: String,
-//    loginEnable: Boolean,
-//    onLoginSelected: () -> Unit
     viewModel: LoginViewModel,
     switcher: @Composable () -> Unit,
     email: String,
@@ -287,7 +212,6 @@ fun FuncionesLogin(
     onLoginSuccess: () -> Unit,
     loginEnable: Boolean
 ){
-    //onLoginSuccess --> esta en LoginViewModel
 
     Column(
         modifier = Modifier
@@ -297,16 +221,14 @@ fun FuncionesLogin(
     ){
         LogoAppLogin(modifier = Modifier)
         TxtsInicio()
+        /** SWITCH --> CON VARIABLES COMPARTIDAS - AUTHVIEWMODEL */
         switcher()
-        //para la recarga y comprobacion constante de los datos, desde que el programa nota q el usuario esta realizando cambios
-        //LoginBodyScreen(email,password, {viewModel.onLoginChange(it)}, loginEnable, {viewModel.onLoginSelected()}) //onLoginChange --> en LoginViewModel
-        //LoginBodyScreen(email, password, {viewModel.onLoginChange(it)}, loginEnable, {viewModel.onLoginSelected()})
         LoginBodyScreen(
             authViewModel = AuthViewModel(),
             email = email,
-            onEmailChanged = { viewModel.onEmailChanged(it) }, // Llamada correcta para email
+            onEmailChanged = { viewModel.onEmailChanged(it) },
             password = password,
-            onPasswordChanged = { viewModel.onPasswordChanged(it) }, // Llamada correcta para password
+            onPasswordChanged = { viewModel.onPasswordChanged(it) },
             loginEnable = loginEnable,
             onLoginSelected = { viewModel.onLoginSelected() }
         )
