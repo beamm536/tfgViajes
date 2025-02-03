@@ -14,6 +14,8 @@ import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
+import com.appclass.myapplication.ui.screens.userProfile.Usuario
+import com.appclass.myapplication.ui.screens.userProfile.UsuarioViewModel
 
 @Composable
 fun NavigationWrapper (navController: NavHostController) {
@@ -22,8 +24,9 @@ fun NavigationWrapper (navController: NavHostController) {
     val authViewModel: AuthViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
     val registroViewModel: RegistroViewModel = viewModel()
+    val usuarioViewModel: UsuarioViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Usuario.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -50,6 +53,12 @@ fun NavigationWrapper (navController: NavHostController) {
                 viewModel = registroViewModel,
                 switcher = { LoginSignUpSwitcher(authViewModel) },
                 navigateToHome = { navController.navigate(AppScreens.Login.ruta) }
+            )
+        }
+
+        composable(AppScreens.Usuario.ruta){
+            Usuario(
+                viewModel = usuarioViewModel
             )
         }
     }
