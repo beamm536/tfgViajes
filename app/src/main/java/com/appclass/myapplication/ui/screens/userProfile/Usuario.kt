@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -77,9 +78,9 @@ fun Usuario(viewModel: UsuarioViewModel){
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF00FF00) // Color de fondo
-                )
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = Color(0xFF00FF00) // Color de fondo
+//                )
             )
 
             //Text(text = "nombre del usuario") //todo: mostrar el nombre del usuario con el q ha sido logeado
@@ -163,9 +164,12 @@ fun AvatarPerfilUsuario(modifier: Modifier){
 fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel){
     Column (
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Color(0xFFF5F6F7))
+            .systemBarsPadding(), //para q el contenido no quede debajo de la barra de navegación
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
+
     ){
         AvatarPerfilUsuario(modifier = Modifier)
     }
