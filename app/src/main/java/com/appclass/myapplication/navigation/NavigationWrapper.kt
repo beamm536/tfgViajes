@@ -16,6 +16,8 @@ import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 import com.appclass.myapplication.ui.screens.userProfile.Usuario
 import com.appclass.myapplication.ui.screens.userProfile.UsuarioViewModel
+import com.appclass.myapplication.ui.screens.userProfile.editProfile.EditarPerfil
+import com.appclass.myapplication.ui.screens.userProfile.editProfile.EditarPerfilViewModel
 
 @Composable
 fun NavigationWrapper (navController: NavHostController) {
@@ -25,6 +27,7 @@ fun NavigationWrapper (navController: NavHostController) {
     val loginViewModel: LoginViewModel = viewModel()
     val registroViewModel: RegistroViewModel = viewModel()
     val usuarioViewModel: UsuarioViewModel = viewModel()
+    val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = AppScreens.Usuario.ruta){
 
@@ -58,7 +61,15 @@ fun NavigationWrapper (navController: NavHostController) {
 
         composable(AppScreens.Usuario.ruta){
             Usuario(
-                viewModel = usuarioViewModel
+                viewModel = usuarioViewModel,
+                navController = navController
+            )
+        }
+
+        composable(AppScreens.EditarPerfil.ruta){
+            EditarPerfil(
+                viewModel = editarPerfilViewModel,
+                navController = navController
             )
         }
     }
