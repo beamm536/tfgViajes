@@ -51,12 +51,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.appclass.myapplication.R
+import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.ui.screens.registro.FuncionesRegistro
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Usuario(viewModel: UsuarioViewModel){
+fun Usuario(navController: NavController, viewModel: UsuarioViewModel){
 
     //DECLARACION DE LAS VARIABLES DE ESETADO DEL VIEWMODEL
 
@@ -87,14 +89,15 @@ fun Usuario(viewModel: UsuarioViewModel){
 
             //las llamadas al resto de funciones las haremos en FuncionesLogin
             FuncionesPerfilUsuario(
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController
             )
         }
     }
 }
 
 @Composable
-fun AvatarPerfilUsuario(modifier: Modifier){
+fun AvatarPerfilUsuario(modifier: Modifier, navController: NavController){
 
 
     Box(
@@ -150,7 +153,7 @@ fun AvatarPerfilUsuario(modifier: Modifier){
             Spacer(modifier = Modifier.height(10.dp))
 
             Button(
-                onClick = { /* Acción de editar perfil */ },
+                onClick = { navController.navigate(AppScreens.EditarPerfil.ruta) },
                 colors = ButtonDefaults.buttonColors(Color(0xFF4A90E2))
             ) {
                 Text(text = "Editar perfil", color = Color.White)
@@ -161,7 +164,7 @@ fun AvatarPerfilUsuario(modifier: Modifier){
 
 
 @Composable
-fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel){
+fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel, navController: NavController){
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -171,7 +174,7 @@ fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel){
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        AvatarPerfilUsuario(modifier = Modifier)
+        AvatarPerfilUsuario(modifier = Modifier, navController)
     }
 
 
