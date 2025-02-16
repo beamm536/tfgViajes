@@ -20,8 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavController
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
@@ -34,7 +33,7 @@ import com.appclass.myapplication.ui.theme.txtBlack
  * Que la vista cambie en funcion del valor de la variable que detecte
  */
 @Composable
-fun Auth(viewModel: AuthViewModel, loginViewModel: LoginViewModel, navigateToHome: () -> Unit, registroViewModel: RegistroViewModel) {
+fun Auth(viewModel: AuthViewModel, loginViewModel: LoginViewModel, navController: NavController,navigateToHome: () -> Unit, registroViewModel: RegistroViewModel) {
     val isLoginSelected: Boolean by viewModel.isLoginSelected.observeAsState(initial = true)
 
 
@@ -49,7 +48,7 @@ fun Auth(viewModel: AuthViewModel, loginViewModel: LoginViewModel, navigateToHom
         Spacer(modifier = Modifier.height(16.dp))
 
         if (isLoginSelected) {
-            Login(viewModel = loginViewModel, navigateToHome = navigateToHome, switcher = { LoginSignUpSwitcher(viewModel) })
+            Login( navController,viewModel = loginViewModel, /*navigateToHome = navigateToHome,*/ switcher = { LoginSignUpSwitcher(viewModel) })
         } else {
             Registro(viewModel = registroViewModel, navigateToHome, switcher = { LoginSignUpSwitcher(viewModel) })
         }
