@@ -29,10 +29,11 @@ fun NavigationWrapper (navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Usuario.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
+                navController = navController,
                 viewModel = authViewModel as AuthViewModel, //para cambiarle el nombre :) pq me daba error jejej
                 loginViewModel = loginViewModel,
                 registroViewModel = registroViewModel,
@@ -45,9 +46,9 @@ fun NavigationWrapper (navController: NavHostController) {
             viewModel --> para la conexion de la vista con la logica
              */
             Login(
+                navController = navController,
                 viewModel = loginViewModel,
                 switcher = { LoginSignUpSwitcher(authViewModel) },
-                navigateToHome = { navController.navigate(AppScreens.Registro.ruta) }
             )
         }
 

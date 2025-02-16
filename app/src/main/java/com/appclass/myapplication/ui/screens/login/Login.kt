@@ -40,18 +40,29 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.appclass.myapplication.R
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
 
 @Composable
-fun Login(viewModel: LoginViewModel, navigateToHome: () -> Unit, switcher: @Composable () -> Unit){
+fun Login(navController: NavController, viewModel: LoginViewModel, switcher: @Composable () -> Unit){
 
     //DECLARACION DE LAS VARIABLES DE ESETADO DEL VIEWMODEL
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false) //nuestro boton empieza deshabilitado
+    //val navigateToUser by viewModel.navigateToUser.observeAsState(false)
+
+    // Si el usuario ha iniciado sesión, navegamos a la pantalla de usuario
+//    if (navigateToUser) {
+//        navController.navigate("Usuario") {
+//            popUpTo("Login") { inclusive = true } // Evita que vuelva al login con "atrás"
+//        }
+//        viewModel.resetNavigation() // Reseteamos el estado después de navegar
+//    }
 
 
     Scaffold(
@@ -73,7 +84,7 @@ fun Login(viewModel: LoginViewModel, navigateToHome: () -> Unit, switcher: @Comp
                 email = email,
                 password = password,
                 loginEnable = loginEnable,
-                onLoginSuccess = navigateToHome
+                onLoginSuccess = { navController.navigate("Usuario") }
             )
         }
     }
@@ -101,7 +112,16 @@ fun TxtsInicio(){
 }
 
 @Composable
-fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged: (String) -> Unit, password: String, onPasswordChanged: (String) -> Unit, loginEnable: Boolean, onLoginSelected: () -> Unit){
+fun LoginBodyScreen(
+    authViewModel: AuthViewModel,
+    email: String,
+    onEmailChanged: (String) -> Unit,
+    password: String,
+    onPasswordChanged: (String) -> Unit,
+    loginEnable: Boolean,
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel
+){
 
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -151,7 +171,8 @@ fun LoginBodyScreen(authViewModel: AuthViewModel, email: String, onEmailChanged:
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onLoginSelected() },
+            //onClick = { onLoginSelected() },
+            onClick = { viewModel.onLoginSelected(onLoginSuccess) },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(Color.Blue),
             enabled = loginEnable
@@ -235,7 +256,9 @@ fun FuncionesLogin(
             password = password,
             onPasswordChanged = { viewModel.onPasswordChanged(it) },
             loginEnable = loginEnable,
-            onLoginSelected = { viewModel.onLoginSelected() }
+            onLoginSuccess = onLoginSuccess,
+            //onLoginSelected = { viewModel.onLoginSelected(onLoginSuccess) },
+            viewModel = viewModel
         )
     }
 }

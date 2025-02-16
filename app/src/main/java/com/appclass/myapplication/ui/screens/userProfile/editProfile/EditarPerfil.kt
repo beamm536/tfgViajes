@@ -1,5 +1,6 @@
 package com.appclass.myapplication.ui.screens.userProfile.editProfile
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +42,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -83,6 +87,30 @@ fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel)
 }
 
 @Composable
+fun AvatarNombreUsuario(){
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Canvasusuario()
+
+        Spacer(modifier = Modifier.size(24.dp))
+
+        // Nombre y Ubicación
+        Column(verticalArrangement = Arrangement.Center) {
+            Text(
+                text = "Preston Cooper \n Nienow",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Gray, modifier = Modifier.size(20.dp))
+            Text(text = "📍 Madrid, Spain", fontSize = 14.sp, color = Color.Gray)
+        }
+    }
+
+}
+
+
+@Composable
 fun EditProfileScreen(navController: NavController) {
     Column(
         modifier = Modifier
@@ -91,38 +119,27 @@ fun EditProfileScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Avatar
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(Color.LightGray),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Icon(Icons.Default.AccountCircle, contentDescription = "Avatar", modifier = Modifier.size(100.dp))
-            Icon(
-                Icons.Default.KeyboardArrowLeft,
-                contentDescription = "Editar Foto",
-                tint = Color.Blue,
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(Color.White, shape = CircleShape)
-                    .padding(4.dp)
-            )
-        }
+//        Box(
+//            modifier = Modifier
+//                .size(100.dp)
+//                .clip(CircleShape)
+//                .background(Color.LightGray),
+//            contentAlignment = Alignment.BottomEnd
+//        ) {
+//            Icon(Icons.Default.AccountCircle, contentDescription = "Avatar", modifier = Modifier.size(100.dp))
+//            Icon(
+//                Icons.Default.KeyboardArrowLeft,
+//                contentDescription = "Editar Foto",
+//                tint = Color.Blue,
+//                modifier = Modifier
+//                    .size(24.dp)
+//                    .background(Color.White, shape = CircleShape)
+//                    .padding(4.dp)
+//            )
+//        }
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        // Nombre y Ubicación
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "Preston Cooper Nienow",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Gray, modifier = Modifier.size(20.dp))
-        }
 
-        Text(text = "📍 Madrid, Spain", fontSize = 14.sp, color = Color.Gray)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -202,6 +219,18 @@ fun ProfileDropdown(label: String) {
     }
 
 
+@Composable
+fun Canvasusuario(){
+    Canvas(modifier = Modifier.size(120.dp, 150.dp)) {
+        drawRoundRect(
+            color = Color.Gray,
+            size = Size(size.width, size.height),
+            cornerRadius = androidx.compose.ui.geometry.CornerRadius(100f, 100f)
+        )
+    }
+}
+
+
 
 @Composable
 fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController){
@@ -214,6 +243,7 @@ fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
+        item { AvatarNombreUsuario() }
         item { EditProfileScreen(navController) }
         //EditProfileScreen(navController)
     }
