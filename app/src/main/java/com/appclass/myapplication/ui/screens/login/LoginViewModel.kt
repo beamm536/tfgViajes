@@ -4,9 +4,14 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.appclass.myapplication.data.AuthRepository
+import com.google.firebase.auth.AuthCredential
+import kotlinx.coroutines.launch
 
 class LoginViewModel: ViewModel(){
+
+    private val authRepository = AuthRepository()
 
     private val _email= MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -45,29 +50,27 @@ class LoginViewModel: ViewModel(){
     private fun isValidEmail(email: String): Boolean = Patterns.EMAIL_ADDRESS.matcher(email).matches()
     private fun isValidPassword(password: String): Boolean = password.length >= 6
 
-//    fun onLoginSelected(afterLogin: () -> Unit) {
-//        val emailValue = _email.value ?: ""
-//        val passwordValue = _password.value ?: ""
-//
-//        // Simulamos el inicio de sesión llamando a la función real de autenticación
-//        authRepository.iniciarSesion(emailValue, passwordValue) { success, _ ->
-//            if (success) {
-//                _navigateToUser.value = true
-//                afterLogin()
-//                _navigateToUser.value = false
-//            }
-//        }
-//    }
-fun onLoginSelected(afterLogin: () -> Unit) {
-    val emailValue = _email.value ?: ""
-    val passwordValue = _password.value ?: ""
 
-    authRepository.iniciarSesion(emailValue, passwordValue) { success, _ ->
-        if (success) {
-            afterLogin()
+    fun onLoginSelected(afterLogin: () -> Unit) {
+        val emailValue = _email.value ?: ""
+        val passwordValue = _password.value ?: ""
+
+        authRepository.iniciarSesion(emailValue, passwordValue) { success, _ ->
+            if (success) {
+                afterLogin()
+            }
         }
     }
-}
+
+
+//    fun loginConGoogle(credential: AuthCredential, onLoginSuccess: () -> Unit) {
+//        authRepository.loginConGoogle(credential) {
+//            onLoginSuccess()
+//        }
+//    }
+
+
+
 
 //    fun resetNavigation() {
 //        _navigateToUser.value = false
@@ -76,7 +79,6 @@ fun onLoginSelected(afterLogin: () -> Unit) {
 
 //--------------------------------------------------------------
 
-    private val authRepository = AuthRepository()
 
 //    fun inciarSesion(email: String, password: String, callback: (Boolean, String?) -> Unit){
 //        //llamamos a la funcion YA CREADA de nuestra clase AuthRepository
