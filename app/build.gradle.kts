@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.firebase.auth.ktx) //libreria para auth
+    implementation(libs.firebase.firestore.ktx) //firestore
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
