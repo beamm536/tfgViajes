@@ -52,18 +52,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.appclass.myapplication.R
 import com.appclass.myapplication.navigation.AppScreens
+import com.appclass.myapplication.ui.components.navbar.BottomNavigationBarComponent
 import com.appclass.myapplication.ui.screens.registro.FuncionesRegistro
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Usuario(navController: NavController, viewModel: UsuarioViewModel){
+fun Usuario(navController: NavHostController, viewModel: UsuarioViewModel){
 
     //DECLARACION DE LAS VARIABLES DE ESETADO DEL VIEWMODEL
 
 
     Scaffold(
+//        bottomBar = {
+//            Nav(navController = navController)
+//        }
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         Column(
