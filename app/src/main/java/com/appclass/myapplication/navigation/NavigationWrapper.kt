@@ -7,11 +7,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.appclass.myapplication.navigation.AppScreens.MapBox
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
+import com.appclass.myapplication.ui.screens.mapbox.MapBox
+import com.appclass.myapplication.ui.screens.mapbox.MapBoxViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 import com.appclass.myapplication.ui.screens.userProfile.Usuario
@@ -29,7 +32,9 @@ fun NavigationWrapper (navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
+    val mapBoxViewModel: MapBoxViewModel = viewModel()
+
+    NavHost(navController = navController, startDestination = AppScreens.MapBox.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -70,6 +75,14 @@ fun NavigationWrapper (navController: NavHostController) {
         composable(AppScreens.EditarPerfil.ruta){
             EditarPerfil(
                 viewModel = editarPerfilViewModel,
+                navController = navController
+            )
+        }
+
+
+        composable(AppScreens.MapBox.ruta){
+            MapBox(
+                viewModel = mapBoxViewModel,
                 navController = navController
             )
         }
