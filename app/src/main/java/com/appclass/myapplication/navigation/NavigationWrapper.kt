@@ -14,6 +14,7 @@ import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitc
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
 import com.appclass.myapplication.ui.screens.mapbox.MapBox
+import com.appclass.myapplication.ui.screens.mapbox.MapBoxScreen
 import com.appclass.myapplication.ui.screens.mapbox.MapBoxViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
@@ -32,7 +33,7 @@ fun NavigationWrapper (navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
-    val mapBoxViewModel: MapBoxViewModel = viewModel()
+    //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = AppScreens.MapBox.ruta){
 
@@ -80,11 +81,14 @@ fun NavigationWrapper (navController: NavHostController) {
         }
 
 
-        composable(AppScreens.MapBox.ruta){
-            MapBox(
-                viewModel = mapBoxViewModel,
-                navController = navController
-            )
+//        composable(AppScreens.MapBox.ruta){
+//            MapBox(
+//                viewModel = mapBoxViewModel,
+//                navController = navController
+//            )
+//        }
+        composable(AppScreens.MapBox.ruta) {
+            MapBoxScreen(navController)
         }
     }
 }

@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
     id("com.google.gms.google-services")
+   // id("com.google.dagger.hilt.android")  CREO Q DE MOMENTO NO ME VOY A METER CON HILT
 }
 
 android {
@@ -52,6 +54,11 @@ android {
 
 dependencies {
 
+    configurations.all {
+        exclude(group = "com.google.android.gms", module = "play-services-ads")
+    }
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -65,7 +72,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.espresso.core)
     implementation(libs.firebase.auth.ktx) //libreria para auth
-    implementation(libs.firebase.firestore.ktx) //firestore
+    implementation(libs.firebase.firestore.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,7 +91,7 @@ dependencies {
     //implementation(libs.androidx.ui.text.google.fonts)
 
     //implementation(libs.accompanist.blur)
-    implementation(kotlin("script-runtime"))
+    //implementation(kotlin("script-runtime"))
 
     //RETROFIT
     //implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -95,7 +103,7 @@ dependencies {
 
 
     //MAPBOX -- 11.10.3 (last version)
-    implementation ("com.mapbox.maps:android:10.15.0")
+    implementation ("com.mapbox.maps:android:11.10.3")
 
     //depuracion de solicitudes
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")

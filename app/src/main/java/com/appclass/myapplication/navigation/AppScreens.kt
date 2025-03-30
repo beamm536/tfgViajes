@@ -2,7 +2,7 @@ package com.appclass.myapplication.navigation
 
 sealed class AppScreens(val ruta: String) {
 
-    object MapBox: AppScreens("MapBox")
+    object MapBox: AppScreens("MapBoxScreen")
 
     object Auth: AppScreens("Auth")
     object Login: AppScreens("Login")
