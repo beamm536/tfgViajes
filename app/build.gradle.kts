@@ -84,4 +84,19 @@ dependencies {
 
     //implementation(libs.accompanist.blur)
     implementation(kotlin("script-runtime"))
+
+    //RETROFIT
+    //implementation("com.squareup.retrofit2:retrofit:2.11.0")
+        //retrofit - para la conversion del tipo de json
+         //implementation("com.squareup.retrofit2:converter-moshi:2.11.0") //converter --> serialization JSON ----- MOSHI
+         //implementation("com.squareup.retrofit2:converter-gson:2.11.0") //GSON
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
+
+
+    //MAPBOX -- 11.10.3 (last version)
+    implementation ("com.mapbox.maps:android:10.15.0")
+
+    //depuracion de solicitudes
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }
