@@ -1,6 +1,7 @@
 package com.appclass.myapplication.data_api.model
 
-import com.google.android.gms.common.Feature
+import com.appclass.myapplication.data_api.model.Feature
+
 
 //clase en la que se va a almacenar la respuesta que obtengamos de la api
 
