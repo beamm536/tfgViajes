@@ -2,6 +2,8 @@ package com.appclass.myapplication.ui.screens.mapbox
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -85,9 +87,14 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
             Text("Buscar")
         }
 
-        geocodingResult.value?.features?.forEach { feature ->
-            Text(text = feature.placeName) //mostramos el nombre del lugar
+        LazyColumn {
+            items(geocodingResult.value?.features ?: emptyList()) { feature ->
+                Text(text = feature.placeName)
+            }
         }
+//        geocodingResult.value?.features?.forEach { feature ->
+//            Text(text = feature.placeName) //mostramos el nombre del lugar
+//        }
         /**
          * el problema de que esto estuviera mal, era la importación de Feature en Geocoding
          */
