@@ -86,7 +86,11 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
         }
 
         geocodingResult.value?.features?.forEach { feature ->
-            Text(text = feature.name) // Mostramos el nombre del lugar
+            Text(text = feature.placeName) //mostramos el nombre del lugar
         }
+        /**
+         * el problema de que esto estuviera mal, era la importación de Feature en Geocoding
+         */
+
     }
 }
