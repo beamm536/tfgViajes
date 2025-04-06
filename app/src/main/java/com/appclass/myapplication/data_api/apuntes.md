@@ -36,3 +36,12 @@ Clase que se encarga de manejar la lógica de acceso a la API. Llama a los méto
 ---
 
 Cada archivo en `data_api` cumple un rol en la arquitectura **MVVM**, concentrando la lógica de red y modelos de datos en esta capa para mantener la app modular y escalable.
+
+---
+
+| API | Necesita Model? | Por qué |
+|-----|-----------------|---------|
+| Geocoding API | Sí | Devuelve JSON con info compleja |
+| Static Images API | No | Devuelve solo imagen (ResponseBody) |
+
+

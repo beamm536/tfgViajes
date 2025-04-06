@@ -29,3 +29,6 @@ Todos estos archivos trabajan juntos siguiendo el patrón **MVVM**, donde:
 - El **ViewModel** pide los datos al repositorio.
 - Y el **repositorio** consulta la API externa usando Retrofit.
 
+---
+
+En el VieeModel - hacemos llamada al repositorio de la API de StaticImages

@@ -9,5 +9,14 @@ data class Feature(
     @SerializedName("place_name")
     val placeName: String,
 
-    val geometry: Geometry
+    val geometry: Geometry, //no nos hace falta de momento
+
+    val center: List<Double> //longitud y latitud del lugar buscado en nuestro buscador
+    // val center: List<Double>?
+
+
+    /**
+     * Center -> es lo que vamos a usar directamente en la otra api que vamos a implementar
+     * Static Images API -> https://docs.mapbox.com/api/maps/static-images/
+     */
 )
