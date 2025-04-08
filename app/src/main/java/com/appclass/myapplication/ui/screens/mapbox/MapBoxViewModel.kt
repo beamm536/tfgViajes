@@ -61,7 +61,7 @@ private suspend fun fetchStaticMap(lon: Double, lat:Double){
         if (response.isSuccessful) {
             // Generas la url manual porque responseBody es imagen
             val url =
-                "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lon,$lat,14,0/500x300?access_token=${staticImagesRepository.accessToken}"
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lon,$lat,14,0/900x700?access_token=${staticImagesRepository.accessToken}"
             _staticMapUrl.value = url
         }
     } catch (e: Exception) {

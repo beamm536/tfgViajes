@@ -1,7 +1,9 @@
 package com.appclass.myapplication.ui.screens.mapbox
 
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -13,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -84,7 +88,13 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
     val geocodingResult = viewModel.geocodingResult.collectAsState()
     val staticMapUrl by viewModel.staticMapUrl.collectAsState()
 
-    Column {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally // Opcional, centra contenido horizontalmente dentro de la Column
+        ) {
         TextField(
             value = query,
             onValueChange = { query = it },
@@ -114,6 +124,7 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
          * el problema de que esto estuviera mal, era la importación de Feature en Geocoding
          */
 
+        }
     }
 }
 
