@@ -112,5 +112,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     //coil - imagen async
-    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 }

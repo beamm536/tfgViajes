@@ -38,7 +38,17 @@ fun fetchGeocoding(query: String) {
             val response = repository.getGeocoding(query)
             Log.d("MapBoxDebug", "Respuesta completa: $response")
             Log.d("MapBoxDebug", "Features: ${response.features}")
+
             _geocodingResult.value = response
+
+            // Si hay resultados, cogemos las coordenadas del primer resultado
+            response.features.firstOrNull()?.let { feature ->
+                val lon = feature.center[0]
+                val lat = feature.center[1]
+
+                fetchStaticMap(lon, lat) // <- Aquí llamas a tu mapa estático
+            }
+
         } catch (e: Exception) {
             Log.e("MapBoxError", "Error en fetchGeocoding", e)
         }

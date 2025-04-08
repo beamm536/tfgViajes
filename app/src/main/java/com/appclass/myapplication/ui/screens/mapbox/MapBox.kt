@@ -15,7 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
+import coil.compose.AsyncImage
+//import coil3.compose.AsyncImage
 import com.appclass.myapplication.data_api.api.MapBoxApiGeocoding
 import com.appclass.myapplication.data_api.api.MapBoxApiStaticImage
 import com.appclass.myapplication.data_api.repository.MapBoxRepository

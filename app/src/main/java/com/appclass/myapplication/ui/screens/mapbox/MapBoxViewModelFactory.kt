@@ -8,7 +8,7 @@ import com.appclass.myapplication.data_api.repository.MapBoxStaticImagesReposito
 
 //esta clase no forma parte de la capa de datos :) por eso esta dnd las vistas
 class MapBoxViewModelFactory (
-    private val repository: MapBoxRepository
+    private val repository: MapBoxRepository,
     private val staticImagesRepository: MapBoxStaticImagesRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
