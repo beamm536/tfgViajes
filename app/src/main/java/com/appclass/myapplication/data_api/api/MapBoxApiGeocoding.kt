@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 //aqui vamos a definir los endpoints a los que vamos a acceder de la API
 
-interface MapBoxApi {
+interface MapBoxApiGeocoding {
     @GET("geocoding/v5/mapbox.places/{query}.json")
     suspend fun getGeocoding(
         @Path("query") query: String,
