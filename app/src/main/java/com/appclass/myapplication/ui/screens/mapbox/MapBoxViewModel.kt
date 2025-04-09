@@ -1,6 +1,14 @@
 package com.appclass.myapplication.ui.screens.mapbox
 
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,11 +24,39 @@ class MapBoxViewModel(
     private val staticImagesRepository: MapBoxStaticImagesRepository
 ): ViewModel() {
 
+    //barra de filtros-buscador
+    var query by mutableStateOf("")
+        private set
+
+    fun onQueryChanged(newQuery: String) {
+        query = newQuery
+    }
+
+    var filters by mutableStateOf(
+        listOf(
+            Filter("Madrid", Icons.Default.Person),
+            Filter("Barcelona", Icons.Default.AccountCircle),
+            Filter("Galicia", Icons.Default.Home),
+            Filter("Cascada", Icons.Default.LocationOn)
+        )
+    )
+        private set
+
+    fun onFilterSelected(filter: Filter) {
+        filters = filters.map {
+            if (it == filter) it.copy(isSelected = !it.isSelected) else it
+        }
+    }
+
+
+
     private val _geocodingResult = MutableStateFlow<GeocodingResponse?>(null)
     val geocodingResult: StateFlow<GeocodingResponse?> = _geocodingResult
 
     private val _staticMapUrl = MutableStateFlow<String?>(null)
     val staticMapUrl: StateFlow<String?> = _staticMapUrl
+
+
 
 //    fun fetchGeocoding(query: String) {
 //        viewModelScope.launch {
@@ -46,7 +82,7 @@ fun fetchGeocoding(query: String) {
                 val lon = feature.center[0]
                 val lat = feature.center[1]
 
-                fetchStaticMap(lon, lat) // <- Aquí llamas a tu mapa estático
+                fetchStaticMap(lon, lat)
             }
 
         } catch (e: Exception) {
