@@ -76,6 +76,8 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.firebase.auth.ktx) //libreria para auth
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.foundation.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
