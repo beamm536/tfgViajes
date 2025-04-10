@@ -68,28 +68,65 @@ class MapBoxViewModel(
 //            }
 //        }
 //    }
-fun fetchGeocoding(query: String) {
-    viewModelScope.launch {
-        try {
-            val response = repository.getGeocoding(query)
-            Log.d("MapBoxDebug", "Respuesta completa: $response")
-            Log.d("MapBoxDebug", "Features: ${response.features}")
 
-            _geocodingResult.value = response
 
-            // Si hay resultados, cogemos las coordenadas del primer resultado
-            response.features.firstOrNull()?.let { feature ->
-                val lon = feature.center[0]
-                val lat = feature.center[1]
+    fun fetchGeocoding(query: String) {
+        viewModelScope.launch {
+            try {
+                // Obtenemos los filtros activos
+                val activeFilters = filters.filter { it.isSelected }.joinToString(" ") { it.name }
 
-                fetchStaticMap(lon, lat)
+                // Construimos la query final
+                val finalQuery = if (activeFilters.isNotEmpty()) "$query $activeFilters" else query
+
+                val response = repository.getGeocoding(finalQuery)
+
+                Log.d("MapBoxDebug", "Query enviada: $finalQuery")
+                Log.d("MapBoxDebug", "Respuesta completa: $response")
+                Log.d("MapBoxDebug", "Features: ${response.features}")
+
+                _geocodingResult.value = response
+
+                // Si hay resultados, cogemos las coordenadas del primer resultado
+                response.features.firstOrNull()?.let { feature ->
+                    val lon = feature.center[0]
+                    val lat = feature.center[1]
+
+                    fetchStaticMap(lon, lat)
+                }
+
+            } catch (e: Exception) {
+                Log.e("MapBoxError", "Error en fetchGeocoding", e)
             }
-
-        } catch (e: Exception) {
-            Log.e("MapBoxError", "Error en fetchGeocoding", e)
         }
     }
-}
+
+//MI CODIGO ANTES DE AÑADIRLE LA FUNCIONALIDAD DE LOS FILTROS
+//fun fetchGeocoding(query: String) {
+//    viewModelScope.launch {
+//        try {
+//            val response = repository.getGeocoding(query)
+//            Log.d("MapBoxDebug", "Respuesta completa: $response")
+//            Log.d("MapBoxDebug", "Features: ${response.features}")
+//
+//            _geocodingResult.value = response
+//
+//            // Si hay resultados, cogemos las coordenadas del primer resultado
+//            response.features.firstOrNull()?.let { feature ->
+//                val lon = feature.center[0]
+//                val lat = feature.center[1]
+//
+//                fetchStaticMap(lon, lat)
+//            }
+//
+//        } catch (e: Exception) {
+//            Log.e("MapBoxError", "Error en fetchGeocoding", e)
+//        }
+//    }
+//}
+
+
+
 
 private suspend fun fetchStaticMap(lon: Double, lat:Double){
     try {
