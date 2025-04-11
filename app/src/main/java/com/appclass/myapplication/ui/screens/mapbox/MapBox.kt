@@ -107,8 +107,8 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
             TextField(
                 value = viewModel.query,
                 onValueChange = {
-                    viewModel.onQueryChanged(it)
-                    viewModel.fetchGeocoding(it)
+                    viewModel.onQueryChanged(it) //actualizar solo el texto
+                    //viewModel.fetchGeocoding(it)
                 },
                 placeholder = { Text("Buscar") },
                 modifier = Modifier.weight(1f)
@@ -157,7 +157,43 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
         //----------
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mapa
+        //---------- para las busquedas recientes
+
+        /**
+         * - comprueba si hay busquedas recientes
+         * - muestra un titulo
+         * - cuando el usr ,pulsa una rellena el textfield y ejecuta fetchGeocoding()
+         */
+        if (viewModel.busquedasRecientes.isNotEmpty()) { //llamda a la funcion que tenemos en el viewmodel
+            Text(
+                text = "Búsquedas recientes:",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                items(viewModel.busquedasRecientes) { recent ->
+                    Button(
+                        onClick = {
+                            viewModel.onQueryChanged(recent)
+                            viewModel.fetchGeocoding(recent)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text(text = recent)
+                    }
+                }
+            }
+        }
+
+
+        //----------
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // mapa
         staticMapUrl?.let { url ->
             AsyncImage(
                 model = url,
