@@ -116,4 +116,7 @@ dependencies {
     //coil - imagen async
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    //dataStore
+    implementation ("androidx.datastore:datastore-preferences:1.1.4")
+
 }

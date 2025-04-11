@@ -13,16 +13,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.appclass.myapplication.data.dataStore.BusquedasRecientesUser
 import com.appclass.myapplication.data_api.model.GeocodingResponse
 import com.appclass.myapplication.data_api.repository.MapBoxRepository
 import com.appclass.myapplication.data_api.repository.MapBoxStaticImagesRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+
+
 class MapBoxViewModel(
     private val repository: MapBoxRepository, //api geocoding - REPOSITORY
-    private val staticImagesRepository: MapBoxStaticImagesRepository //api staticimages - REPOSITORY
+    private val staticImagesRepository: MapBoxStaticImagesRepository, //api staticimages - REPOSITORY
+    private val busquedasRecientesUser: BusquedasRecientesUser
 ): ViewModel() {
 
     //barra de filtros-buscador
@@ -44,7 +49,8 @@ class MapBoxViewModel(
     )
         private set
 
-    val busquedasRecientes = mutableStateListOf<String>()
+    //val busquedasRecientes = mutableStateListOf<String>()
+    val busquedasRecientesFlow: Flow<List<String>> = busquedasRecientesUser.busquedasRecientes
 
     fun onFilterSelected(filter: Filter) {
         filters = filters.map {
@@ -72,7 +78,7 @@ class MapBoxViewModel(
                 val finalQuery = if (activeFilters.isNotEmpty()) "$query $activeFilters" else query
 
                 val response = repository.getGeocoding(finalQuery)
-                guardarBusquedasRecientes(query)//con esto me aseguro de que se guarden querys despues de hacer la busqueda
+                guardarBusquedaReciente(query)//con esto me aseguro de que se guarden querys despues de hacer la busqueda
                 _geocodingResult.value = response
 
 
@@ -111,16 +117,22 @@ class MapBoxViewModel(
 
 
     /**FUNCION PARA ALMACENAR LAS BUSQUEDAS RECIENTES DEL USUARIO*/
-    fun guardarBusquedasRecientes(query: String){
-        if(query.isBlank()) return
-        busquedasRecientes.remove(query)
-        busquedasRecientes.add(0, query)
-        if (busquedasRecientes.size > 5){
-            busquedasRecientes.removeAt(busquedasRecientes.lastIndex)
-            //busquedasRecientes.removeLast()
+//    fun guardarBusquedasRecientes(query: String){
+//        if(query.isBlank()) return
+//        busquedasRecientes.remove(query)
+//        busquedasRecientes.add(0, query)
+//        if (busquedasRecientes.size > 5){
+//            busquedasRecientes.removeAt(busquedasRecientes.lastIndex)
+//            //busquedasRecientes.removeLast()
+//        }
+//    }
+    // Guarda una búsqueda reciente en DataStore
+    fun guardarBusquedaReciente(query: String) {
+        if (query.isBlank()) return
+        viewModelScope.launch {
+            busquedasRecientesUser.guardarBusqueda(query)
         }
     }
-
 
 
 }
