@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.appclass.myapplication.ui.screens.mapbox
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,13 +10,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -61,6 +68,7 @@ fun MapBoxScreen(navController: NavController) {
     MapBox(navController, viewModel)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
     var query by remember { mutableStateOf("") }
@@ -83,22 +91,57 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.White)
+                .height(56.dp)
+                .border(width = 2.dp, color = Color.Black),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextField(
-                value = query,
-                onValueChange = {
+            OutlinedCampoBusqueda(
+                query = query,
+                onQueryChange = {
                     query = it
-                    // También actualizamos el query en el ViewModel
                     viewModel.onQueryChanged(it)
                 },
-                placeholder = { Text("Buscar") },
-                modifier = Modifier.weight(1f)
+                onSearchClick = {
+                    viewModel.fetchGeocoding(query)
+                },
+                onFilterClick = {
+                    // Puedes abrir un modal de filtros o simplemente cambiar UI
+                    println("Clic en filtros")
+                }
             )
-            IconButton(onClick = { viewModel.fetchGeocoding(query) }) {
-                Icon(Icons.Default.Search, contentDescription = "Búsqueda manual")
-            }
+
+//            TextField(
+//                value = query,
+//                onValueChange = {
+//                    query = it
+//                    // También actualizamos el query en el ViewModel
+//                    viewModel.onQueryChanged(it)
+//                },
+//                placeholder = {
+//                    Text("Buscar", color = Color.Gray)
+//                },
+//                singleLine = true,
+//                colors = TextFieldDefaults.textFieldColors(
+//                    containerColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent,
+//                    focusedIndicatorColor = Color.Transparent,
+//                    disabledIndicatorColor = Color.Transparent,
+//                    cursorColor = Color.Black
+//                    //textColor = Color.Black
+//                ),
+//
+//                modifier = Modifier.weight(1f)
+//            )
+
+
+//            IconButton(onClick = { viewModel.fetchGeocoding(query) }) {
+//                Icon(Icons.Default.Search, contentDescription = "Búsqueda manual")
+//            }
+
+
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -232,3 +275,45 @@ fun SelectableCircleChip(
         )
     }
 }
+
+
+
+@Composable
+fun OutlinedCampoBusqueda(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
+    onFilterClick: () -> Unit
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text("Buscar", color = Color.Gray) },
+        singleLine = true,
+        trailingIcon = {
+            IconButton(onClick = onFilterClick) {
+                Icon(
+                    imageVector = Icons.Default.List,
+                    contentDescription = "Filtros",
+                    tint = Color.Gray
+                )
+            }
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = outlinedTextFieldColors(
+            unfocusedBorderColor = Color.Gray,
+            focusedBorderColor = Color.Gray,
+            cursorColor = Color.Gray
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .height(56.dp)
+    )
+}
+
+
+
+
+
+
