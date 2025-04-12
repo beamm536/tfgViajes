@@ -119,4 +119,7 @@ dependencies {
     //dataStore
     implementation ("androidx.datastore:datastore-preferences:1.1.4")
 
+    //material3
+    implementation ("androidx.compose.material3:material3:1.3.2")
+
 }
