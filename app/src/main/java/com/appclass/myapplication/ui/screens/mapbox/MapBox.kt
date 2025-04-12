@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -35,6 +36,7 @@ import com.appclass.myapplication.data_api.api.MapBoxApiStaticImage
 import com.appclass.myapplication.data_api.repository.MapBoxRepository
 import com.appclass.myapplication.data_api.repository.MapBoxStaticImagesRepository
 import com.appclass.myapplication.navigation.AppScreens.MapBox
+import com.appclass.myapplication.ui.theme.Poppins
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -78,40 +80,61 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
     // Recolecta las búsquedas recientes del ViewModel usando DataStore
     val busquedasRecientes by viewModel.busquedasRecientesFlow.collectAsState(initial = emptyList())
 
-    Column(modifier = Modifier.fillMaxSize()) {
 
-        // Titulo
-        Text(
-            text = "Búsqueda",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(16.dp)
-        )
+    //COLUMNA PRINCIPAL DE LA VISTA
+    Column(
+        //verticalArrangement = Arrangement.Center,
+        //horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column {
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                // Titulo
+                Text(
+                    text = "Búsqueda",
+                    fontFamily = Poppins,
+                    style = MaterialTheme.typography.headlineLarge, //headlineMedium
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
 
-        // Search + Filtros Icon
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-                .height(56.dp)
-                .border(width = 2.dp, color = Color.Black),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            OutlinedCampoBusqueda(
-                query = query,
-                onQueryChange = {
-                    query = it
-                    viewModel.onQueryChanged(it)
-                },
-                onSearchClick = {
-                    viewModel.fetchGeocoding(query)
-                },
-                onFilterClick = {
-                    // Puedes abrir un modal de filtros o simplemente cambiar UI
-                    println("Clic en filtros")
-                }
-            )
+            // Search + Filtros Icon
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White)
+                    .height(56.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedCampoBusqueda(
+                    query = query,
+                    onQueryChange = {
+                        query = it
+                        viewModel.onQueryChanged(it)
+                    },
+                    onSearchClick = {
+                        viewModel.fetchGeocoding(query)
+                    },
+                    onFilterClick = {
+                        // Puedes abrir un modal de filtros o simplemente cambiar UI
+                        println("Clic en filtros")
+                    }
+                )
+            }
+        }
+
+
+
+
 
 //            TextField(
 //                value = query,
@@ -142,54 +165,71 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
 //            }
 
 
-        }
+
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Filtros horizontales
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp)
-        ) {
-            items(viewModel.filters) { filter ->
-                SelectableCircleChip(
-                    icon = filter.icon,
-                    label = filter.name,
-                    selected = filter.isSelected,
-                    onSelectedChange = {
-                        viewModel.onFilterSelected(filter)
-                        viewModel.fetchGeocoding(viewModel.query)
-                    }
-                )
-            }
+Column(
+    modifier = Modifier
+) {
+    Text(
+        text = "Categoría", //filtros
+        fontFamily = Poppins,
+        style = MaterialTheme.typography.headlineSmall, //headlineMedium
+        modifier = Modifier.padding(16.dp)
+    )
+    // Filtros horizontales
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(viewModel.filters) { filter ->
+            SelectableCircleChip(
+                icon = filter.icon,
+                label = filter.name,
+                selected = filter.isSelected,
+                onSelectedChange = {
+                    viewModel.onFilterSelected(filter)
+                    viewModel.fetchGeocoding(viewModel.query)
+                }
+            )
         }
+    }
+}
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
         //---------- para las busquedas recientes
         if (busquedasRecientes.isNotEmpty()) { // llamada a la función que tenemos en el viewModel
-            Text(
-                text = "Búsquedas recientes:",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            Column {
+                Text(
+                    text = "Búsquedas recientes:",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontFamily = Poppins,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
 
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                items(busquedasRecientes) { recent ->
-                    Button(
-                        onClick = {
-                            query = recent
-                            viewModel.onQueryChanged(recent)
-                            viewModel.fetchGeocoding(recent)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Text(text = recent)
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    items(busquedasRecientes) { recent ->
+                        Button(
+                            onClick = {
+                                query = recent
+                                viewModel.onQueryChanged(recent)
+                                viewModel.fetchGeocoding(recent)
+                            },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(
+                                text = recent,
+                                fontFamily = Poppins
+                            )
+                        }
                     }
                 }
             }
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -216,7 +256,7 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
                 PlaceCard(feature.placeName)
             }
         }
-    }
+    }//cierre del column principal
 }
 
 @Composable
@@ -270,6 +310,7 @@ fun SelectableCircleChip(
         Text(
             text = label,
             color = textColor,
+            fontFamily = Poppins,
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.Center
         )
@@ -288,13 +329,19 @@ fun OutlinedCampoBusqueda(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Buscar", color = Color.Gray) },
+        placeholder = {
+            Text(
+                "Buscar",
+                color = Color.Gray,
+                fontFamily = Poppins
+            )
+        },
         singleLine = true,
         trailingIcon = {
-            IconButton(onClick = onFilterClick) {
+            IconButton(onClick = onSearchClick) {
                 Icon(
-                    imageVector = Icons.Default.List,
-                    contentDescription = "Filtros",
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Lupa de busqueda",
                     tint = Color.Gray
                 )
             }
