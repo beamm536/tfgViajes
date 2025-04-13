@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.appclass.myapplication.navigation.AppScreens.MapBox
+import com.appclass.myapplication.ui.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
@@ -35,7 +36,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.MapBox.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.MapOnly.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -89,6 +90,11 @@ fun NavigationWrapper (navController: NavHostController) {
 //        }
         composable(AppScreens.MapBox.ruta) {
             MapBoxScreen(navController)
+        }
+
+
+        composable(AppScreens.MapOnly.ruta) {
+            MapOnlyScreen(navController)
         }
     }
 }

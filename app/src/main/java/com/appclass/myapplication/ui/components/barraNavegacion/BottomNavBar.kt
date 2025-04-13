@@ -15,6 +15,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 
+/**
+ * UI de nuestro componente bottombar
+ */
+
 @Composable
 fun BottomNavBar(navController: NavController, viewModel: NavigationViewModel) {
     val selectedItem by viewModel.iconoSeleccionado

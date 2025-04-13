@@ -55,7 +55,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.appclass.myapplication.R
 import com.appclass.myapplication.navigation.AppScreens
-import com.appclass.myapplication.ui.components.navbar.BottomNavigationBarComponent
 import com.appclass.myapplication.ui.screens.registro.FuncionesRegistro
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -148,35 +148,6 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
             }
 
 
-//            TextField(
-//                value = query,
-//                onValueChange = {
-//                    query = it
-//                    // También actualizamos el query en el ViewModel
-//                    viewModel.onQueryChanged(it)
-//                },
-//                placeholder = {
-//                    Text("Buscar", color = Color.Gray)
-//                },
-//                singleLine = true,
-//                colors = TextFieldDefaults.textFieldColors(
-//                    containerColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    disabledIndicatorColor = Color.Transparent,
-//                    cursorColor = Color.Black
-//                    //textColor = Color.Black
-//                ),
-//
-//                modifier = Modifier.weight(1f)
-//            )
-
-
-//            IconButton(onClick = { viewModel.fetchGeocoding(query) }) {
-//                Icon(Icons.Default.Search, contentDescription = "Búsqueda manual")
-//            }
-
-
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier

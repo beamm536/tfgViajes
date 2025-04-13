@@ -8,6 +8,16 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * SEALED CLASS --> para modelar los estados finitos / posibles estados, que nos podemos encontrar como resultado de una operación
+ * - F : representacion de un conjunto limitado de objetos / o de estados / eventos que pueda manejar la aplicación
+ *
+ * ------------------
+ * Cada NavItem es único, y cada uno de ellos cuenta con 3 propiedades : la ruta / el icono / label(nombre, definición)
+ * Definimos los items/objetos que vamos a tener en nuestra barra de navegación
+ *
+ */
+
 sealed class NavItem (
     val route: String,
     val icon: ImageVector,
