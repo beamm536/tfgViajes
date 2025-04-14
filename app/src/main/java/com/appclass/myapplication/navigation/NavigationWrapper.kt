@@ -7,12 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
+import com.appclass.myapplication.ui.screens.mapbox.MapBox
 import com.appclass.myapplication.ui.screens.mapbox.MapBoxScreen
 import com.appclass.myapplication.ui.screens.mapbox.detalleMapa.DetalleMapaScreen
 import com.appclass.myapplication.ui.screens.registro.Registro
@@ -65,7 +67,14 @@ fun NavigationWrapper (navController: NavHostController) {
             )
         }
 
-        composable(AppScreens.Usuario.ruta){
+//        composable(AppScreens.Usuario.ruta){
+//            Usuario(
+//                viewModel = usuarioViewModel,
+//                navController = navController
+//            )
+//        }
+
+        composable(NavItem.Profile.route) {
             Usuario(
                 viewModel = usuarioViewModel,
                 navController = navController
@@ -88,6 +97,11 @@ fun NavigationWrapper (navController: NavHostController) {
 //        }
         composable(AppScreens.MapBox.ruta) {
             MapBoxScreen(navController)
+        }
+        composable(NavItem.Search.route) {
+            MapBoxScreen(
+                navController = navController
+            )
         }
 
 

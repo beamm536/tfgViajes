@@ -24,8 +24,8 @@ sealed class NavItem (
     val label: String
 ) {
     object Home : NavItem("home", Icons.Default.Home, "Inicio")
-    object Search : NavItem("search", Icons.Default.Search, "Buscar")
+    object Search : NavItem("mapbox", Icons.Default.Search, "Buscar")
     object Map : NavItem("map", Icons.Default.Place, "Mapa")
     object Chat : NavItem("chat", Icons.Default.List, "Chat")
-    object Profile : NavItem("profile", Icons.Default.Person, "Perfil")
+    object Profile : NavItem("usuario", Icons.Default.Person, "Perfil")
 }
