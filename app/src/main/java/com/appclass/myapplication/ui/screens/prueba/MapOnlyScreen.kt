@@ -1,4 +1,4 @@
-package com.appclass.myapplication.ui.prueba
+package com.appclass.myapplication.ui.screens.prueba
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
