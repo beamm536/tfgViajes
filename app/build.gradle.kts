@@ -108,8 +108,10 @@ dependencies {
 
 
     //MAPBOX -- 11.10.3 (last version)
-    implementation ("com.mapbox.maps:android:11.10.3") //version qe aparece en la doc de sdk - 11.11.0
+    implementation ("com.mapbox.maps:android:11.11.0") //version qe aparece en la doc de sdk - 11.11.0 //11.10.3
     implementation("com.mapbox.extension:maps-compose:11.11.0")
+
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-geojson:7.4.0")
 
     //depuracion de solicitudes
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")

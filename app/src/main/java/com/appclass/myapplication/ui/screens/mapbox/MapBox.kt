@@ -2,6 +2,7 @@
 
 package com.appclass.myapplication.ui.screens.mapbox
 
+import android.R.attr.onClick
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import com.appclass.myapplication.data_api.api.MapBoxApiGeocoding
 import com.appclass.myapplication.data_api.api.MapBoxApiStaticImage
 import com.appclass.myapplication.data_api.repository.MapBoxRepository
 import com.appclass.myapplication.data_api.repository.MapBoxStaticImagesRepository
+import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.navigation.AppScreens.MapBox
 import com.appclass.myapplication.ui.components.barraNavegacion.BottomNavBar
 import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
@@ -234,18 +236,26 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 items(geocodingResult.value?.features ?: emptyList()) { feature ->
-                    PlaceCard(feature.placeName)
+                    PlaceCard(feature.placeName){
+                        val lat = feature.center[1]
+                        val lon = feature.center[0]
+                        val nombre = feature.placeName.replace("/", "_") // Evita fallos en la URL
+                        navController.navigate(
+                            AppScreens.DetalleMapa.createRoute(nombre, lat, lon)
+                        )
+                    }
                 }
             }
         }//cierre del column principal
     }
 }
 @Composable
-fun PlaceCard(name: String) {
+fun PlaceCard(name: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

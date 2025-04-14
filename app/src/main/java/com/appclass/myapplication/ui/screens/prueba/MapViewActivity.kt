@@ -1,4 +1,4 @@
-package com.appclass.myapplication.ui.prueba
+package com.appclass.myapplication.ui.screens.prueba
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
