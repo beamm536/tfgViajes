@@ -95,7 +95,6 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
         }
     ) { innerPadding ->
 
-
         //COLUMNA PRINCIPAL DE LA VISTA
         Column(
             //verticalArrangement = Arrangement.Center,
@@ -236,7 +235,7 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 items(geocodingResult.value?.features ?: emptyList()) { feature ->
-                    PlaceCard(feature.placeName){
+                    PlaceCard(feature.placeName) {
                         val lat = feature.center[1]
                         val lon = feature.center[0]
                         val nombre = feature.placeName.replace("/", "_") // Evita fallos en la URL
@@ -352,9 +351,3 @@ fun OutlinedCampoBusqueda(
             .background(color = Color.White)
     )
 }
-
-
-
-
-
-
