@@ -35,13 +35,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -52,12 +55,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.appclass.myapplication.models.User
 import com.appclass.myapplication.ui.screens.userProfile.FuncionesPerfilUsuario
 import com.appclass.myapplication.ui.theme.Poppins
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel) {
+
+    LaunchedEffect(Unit) {
+        viewModel.cargarDatosUsuario()
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -70,88 +79,69 @@ fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel)
             CenterAlignedTopAppBar(
                 title = { Text(text = "Editar Perfil") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {//volver de la pantalla de la q el usuario viene
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Volver atrás"
-                        )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Volver atrás")
                     }
                 }
             )
-            FuncionesEditarPerfilUsuario(
-                viewModel = viewModel,
-                navController
-            )
+            FuncionesEditarPerfilUsuario(viewModel, navController)
         }
     }
 }
 
 @Composable
-fun AvatarNombreUsuario(){
+fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController) {
+    val user by viewModel.usuario.observeAsState()
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F6F7))
+            .systemBarsPadding(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item { AvatarNombreUsuario(user) }
+        item { EditProfileScreen(navController, user) }
+    }
+}
+
+@Composable
+fun AvatarNombreUsuario(user: User?) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Canvasusuario()
-
         Spacer(modifier = Modifier.size(24.dp))
-
-        // Nombre y Ubicación
         Column(verticalArrangement = Arrangement.Center) {
             Text(
-                text = "Preston Cooper \n Nienow",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                text = "${user?.nombre ?: ""} ${user?.apellidos ?: ""}",
+                fontSize = 20.sp
             )
             Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Gray, modifier = Modifier.size(20.dp))
-            Text(text = "📍 Madrid, Spain", fontSize = 14.sp, color = Color.Gray)
+            Text(text = "📍 España", fontSize = 14.sp, color = Color.Gray) // o puedes guardar ciudad en Firestore si la tienes
         }
     }
-
 }
 
-
 @Composable
-fun EditProfileScreen(navController: NavController) {
+fun EditProfileScreen(navController: NavController, user: User?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Avatar
-//        Box(
-//            modifier = Modifier
-//                .size(100.dp)
-//                .clip(CircleShape)
-//                .background(Color.LightGray),
-//            contentAlignment = Alignment.BottomEnd
-//        ) {
-//            Icon(Icons.Default.AccountCircle, contentDescription = "Avatar", modifier = Modifier.size(100.dp))
-//            Icon(
-//                Icons.Default.KeyboardArrowLeft,
-//                contentDescription = "Editar Foto",
-//                tint = Color.Blue,
-//                modifier = Modifier
-//                    .size(24.dp)
-//                    .background(Color.White, shape = CircleShape)
-//                    .padding(4.dp)
-//            )
-//        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-
-
+        ProfileTextField(label = "Nombre de usuario*", value = user?.nombre ?: "")
+        ProfileTextField(label = "Apellidos", value = user?.apellidos ?: "")
+        ProfileTextField(label = "Fecha de nacimiento*", value = user?.fechaNacimiento ?: "")
+        ProfileDropdown(label = "Seleccione un género", initialValue = user?.genero ?: "")
+        ProfileTextField(label = "Email", value = user?.email ?: "")
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campos de entrada
-        ProfileTextField(label = "Nombre de usuario*", placeholder = "Ejemplo123")
-        ProfileTextField(label = "Presentación", placeholder = "Ej: Sports 🏀 & Fortnite 🎮")
-        ProfileTextField(label = "Fecha de nacimiento*", placeholder = "13-03-1972",/* trailingIcon = Icons.Default.DateRange*/)
-        ProfileDropdown(label = "Seleccione un género")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Botón Guardar Cambios
         Button(
             onClick = { /* Guardar cambios */ },
             colors = ButtonDefaults.buttonColors(Color(0xFF4A90E2)),
@@ -162,8 +152,7 @@ fun EditProfileScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Configuración y eliminar cuenta
-        TextButton(onClick = { /* Ir a configuración */ }) {
+        TextButton(onClick = { /* Configuración */ }) {
             Text(text = "Configuración de la cuenta", color = Color(0xFF4A90E2))
         }
 
@@ -174,9 +163,23 @@ fun EditProfileScreen(navController: NavController) {
 }
 
 @Composable
-fun ProfileDropdown(label: String) {
+fun ProfileTextField(label: String, value: String, trailingIcon: ImageVector? = null) {
+    Column {
+        Text(text = label, fontWeight = FontWeight.Bold)
+        OutlinedTextField(
+            value = value,
+            onValueChange = {}, // Deja esto por ahora como solo lectura
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+fun ProfileDropdown(label: String, initialValue: String = "") {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("") }
+    var selectedText by remember { mutableStateOf(initialValue) }
 
     Column {
         Text(text = label, fontWeight = FontWeight.Bold)
@@ -188,63 +191,39 @@ fun ProfileDropdown(label: String) {
                 modifier = Modifier.fillMaxWidth(),
                 readOnly = true,
                 trailingIcon = {
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = null, Modifier.clickable { expanded = true })
+                    Icon(
+                        Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.clickable { expanded = true }
+                    )
                 }
             )
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                DropdownMenuItem(text = { Text("Masculino") }, onClick = { selectedText = "Masculino"; expanded = false })
-                DropdownMenuItem(text = { Text("Femenino") }, onClick = { selectedText = "Femenino"; expanded = false })
-                DropdownMenuItem(text = { Text("Otro") }, onClick = { selectedText = "Otro"; expanded = false })
+                DropdownMenuItem(text = { Text("Masculino") }, onClick = {
+                    selectedText = "Masculino"
+                    expanded = false
+                })
+                DropdownMenuItem(text = { Text("Femenino") }, onClick = {
+                    selectedText = "Femenino"
+                    expanded = false
+                })
+                DropdownMenuItem(text = { Text("Otro") }, onClick = {
+                    selectedText = "Otro"
+                    expanded = false
+                })
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
-//TODO --> tendremos q hacer como una "inyeccion" de los valores para no repetir ==> IGUAL Q REACT CON ${props.email}
-
 @Composable
-    fun ProfileTextField(label: String, placeholder: String, trailingIcon: ImageVector? = null) {
-        Column {
-            Text(text = label, fontWeight = FontWeight.Bold)
-            OutlinedTextField(
-                value = "email",
-                onValueChange ={ /*"onEmailChanged"(it)*/ }, //es lo mismo que onTextFieldChanged(email, it) -> pero para q no de error con los parámetros
-                label = { Text("Email") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-
-
-@Composable
-fun Canvasusuario(){
+fun Canvasusuario() {
     Canvas(modifier = Modifier.size(120.dp, 150.dp)) {
         drawRoundRect(
             color = Color.Gray,
             size = Size(size.width, size.height),
-            cornerRadius = androidx.compose.ui.geometry.CornerRadius(100f, 100f)
+            cornerRadius = CornerRadius(100f, 100f)
         )
-    }
-}
-
-
-
-@Composable
-fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController){
-    LazyColumn (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F6F7))
-            .systemBarsPadding(), //para q el contenido no quede debajo de la barra de navegación
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        item { AvatarNombreUsuario() }
-        item { EditProfileScreen(navController) }
-        //EditProfileScreen(navController)
     }
 }
