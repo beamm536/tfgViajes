@@ -1,17 +1,22 @@
 package com.appclass.myapplication.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
+import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
+import com.appclass.myapplication.ui.screens.mapbox.MapBox
+import com.appclass.myapplication.ui.screens.mapbox.MapBoxScreen
+import com.appclass.myapplication.ui.screens.mapbox.detalleMapa.DetalleMapaScreen
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 import com.appclass.myapplication.ui.screens.userProfile.Usuario
@@ -29,7 +34,9 @@ fun NavigationWrapper (navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
+    //val mapBoxViewModel: MapBoxViewModel = viewModel()
+
+    NavHost(navController = navController, startDestination = AppScreens.MapBox.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -60,7 +67,14 @@ fun NavigationWrapper (navController: NavHostController) {
             )
         }
 
-        composable(AppScreens.Usuario.ruta){
+//        composable(AppScreens.Usuario.ruta){
+//            Usuario(
+//                viewModel = usuarioViewModel,
+//                navController = navController
+//            )
+//        }
+
+        composable(NavItem.Profile.route) {
             Usuario(
                 viewModel = usuarioViewModel,
                 navController = navController
@@ -72,6 +86,43 @@ fun NavigationWrapper (navController: NavHostController) {
                 viewModel = editarPerfilViewModel,
                 navController = navController
             )
+        }
+
+
+//        composable(AppScreens.MapBox.ruta){
+//            MapBox(
+//                viewModel = mapBoxViewModel,
+//                navController = navController
+//            )
+//        }
+        composable(AppScreens.MapBox.ruta) {
+            MapBoxScreen(navController)
+        }
+        composable(NavItem.Search.route) {
+            MapBoxScreen(
+                navController = navController
+            )
+        }
+
+
+        composable(AppScreens.MapOnly.ruta) {
+            MapOnlyScreen(navController)
+        }
+
+
+        composable(
+            route = AppScreens.DetalleMapa.ruta,
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("lat") { type = NavType.StringType },
+                navArgument("lon") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val lat = backStackEntry.arguments?.getString("lat")?.toDoubleOrNull() ?: 0.0
+            val lon = backStackEntry.arguments?.getString("lon")?.toDoubleOrNull() ?: 0.0
+
+            DetalleMapaScreen(nombre, lat, lon, viewModel())
         }
     }
 }

@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
     id("com.google.gms.google-services")
+   // id("com.google.dagger.hilt.android")  CREO Q DE MOMENTO NO ME VOY A METER CON HILT
 }
 
 android {
@@ -14,6 +16,8 @@ android {
         targetSdk = 35 //34
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "MAPBOX_TOKEN", "\"${project.properties["MAPBOX_TOKEN"]}\"") //para que se pueda acceder a la variable de la api de mapbox desde kotlin-vista
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -52,6 +57,11 @@ android {
 
 dependencies {
 
+    configurations.all {
+        exclude(group = "com.google.android.gms", module = "play-services-ads")
+    }
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,8 +74,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.espresso.core)
-    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.auth.ktx) //libreria para auth
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.foundation.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,5 +96,33 @@ dependencies {
     //implementation(libs.androidx.ui.text.google.fonts)
 
     //implementation(libs.accompanist.blur)
-    implementation(kotlin("script-runtime"))
+    //implementation(kotlin("script-runtime"))
+
+    //RETROFIT
+    //implementation("com.squareup.retrofit2:retrofit:2.11.0")
+        //retrofit - para la conversion del tipo de json
+         //implementation("com.squareup.retrofit2:converter-moshi:2.11.0") //converter --> serialization JSON ----- MOSHI
+         //implementation("com.squareup.retrofit2:converter-gson:2.11.0") //GSON
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
+
+
+    //MAPBOX -- 11.10.3 (last version)
+    implementation ("com.mapbox.maps:android:11.11.0") //version qe aparece en la doc de sdk - 11.11.0 //11.10.3
+    implementation("com.mapbox.extension:maps-compose:11.11.0")
+
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-geojson:7.4.0")
+
+    //depuracion de solicitudes
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    //coil - imagen async
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //dataStore
+    implementation ("androidx.datastore:datastore-preferences:1.1.4")
+
+    //material3
+    implementation ("androidx.compose.material3:material3:1.3.2")
+
 }
