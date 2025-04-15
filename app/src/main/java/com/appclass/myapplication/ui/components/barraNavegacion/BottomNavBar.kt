@@ -32,7 +32,7 @@ fun BottomNavBar(navController: NavController, viewModel: NavigationViewModel) {
     )
 
     NavigationBar(
-        containerColor = Color.White,
+        containerColor = Color(0xFF2596BE),
         tonalElevation = 6.dp,
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -54,10 +54,10 @@ fun BottomNavBar(navController: NavController, viewModel: NavigationViewModel) {
                 },
                 colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.Black,
-                    unselectedIconColor = Color.Gray,
+                    unselectedIconColor = Color.White,
                     indicatorColor = Color.Transparent
                 ),
-                alwaysShowLabel = false
+                alwaysShowLabel = false //false
             )
         }
     }

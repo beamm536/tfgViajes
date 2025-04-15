@@ -68,7 +68,7 @@ fun Usuario(navController: NavHostController, viewModel: UsuarioViewModel){
     val navigationViewModel: NavigationViewModel = viewModel()
 
     Scaffold(
-        containerColor = Color(0xFF3B3B3B),
+        containerColor = Color(0xFFF0FAF6),
         bottomBar = {
             BottomNavBar(navController = navController, viewModel = navigationViewModel)
         },
