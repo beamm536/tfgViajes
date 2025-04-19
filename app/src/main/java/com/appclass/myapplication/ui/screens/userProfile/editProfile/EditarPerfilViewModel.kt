@@ -40,4 +40,13 @@ class EditarPerfilViewModel : ViewModel() {
                 }
         }
     }
+
+    fun actualizarDatosUsuario(user: User, callback: (Boolean, String?) -> Unit) {
+        val uid = user.uid
+        FirebaseFirestore.getInstance().collection("usuariosTFG")
+            .document(uid)
+            .set(user)
+            .addOnSuccessListener { callback(true, null) }
+            .addOnFailureListener { callback(false, it.message) }
+    }
 }

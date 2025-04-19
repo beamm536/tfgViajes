@@ -91,6 +91,7 @@ fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel)
 
 @Composable
 fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController) {
+
     val user by viewModel.usuario.observeAsState()
 
     LazyColumn(
@@ -102,7 +103,7 @@ fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item { AvatarNombreUsuario(user) }
-        item { EditProfileScreen(navController, user) }
+        item { EditProfileScreen(navController, user, viewModel) }
     }
 }
 
@@ -125,7 +126,14 @@ fun AvatarNombreUsuario(user: User?) {
 }
 
 @Composable
-fun EditProfileScreen(navController: NavController, user: User?) {
+fun EditProfileScreen(navController: NavController, user: User?, viewModel: EditarPerfilViewModel) {
+
+    val nombre = remember { mutableStateOf(user?.nombre ?: "") }
+    val apellidos = remember { mutableStateOf(user?.apellidos ?: "") }
+    val fechaNacimiento = remember { mutableStateOf(user?.fechaNacimiento ?: "") }
+    val genero = remember { mutableStateOf(user?.genero ?: "") }
+    val email = remember { mutableStateOf(user?.email ?: "") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -134,16 +142,34 @@ fun EditProfileScreen(navController: NavController, user: User?) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        ProfileTextField(label = "Nombre de usuario*", value = user?.nombre ?: "")
-        ProfileTextField(label = "Apellidos", value = user?.apellidos ?: "")
-        ProfileTextField(label = "Fecha de nacimiento*", value = user?.fechaNacimiento ?: "")
-        ProfileDropdown(label = "Seleccione un género", initialValue = user?.genero ?: "")
-        ProfileTextField(label = "Email", value = user?.email ?: "")
+        ProfileTextField(label = "Nombre", value = nombre.value) { nombre.value = it }
+        ProfileTextField(label = "Apellidos", value = apellidos.value) { apellidos.value = it }
+        ProfileTextField(label = "Fecha Nacimiento", value = fechaNacimiento.value) { fechaNacimiento.value = it }
+        ProfileDropdown(label = "Seleccione un género", initialValue = genero.value) { genero.value = it }
+        ProfileTextField(label = "Email", value = email.value) { email.value = it }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Guardar cambios */ },
+            onClick = {
+                val updatedUser = User(
+                    uid = user?.uid ?: "",
+                    nombre = nombre.value,
+                    apellidos = apellidos.value,
+                    fechaNacimiento = fechaNacimiento.value,
+                    genero = genero.value,
+                    email = email.value
+                )
+                viewModel.actualizarDatosUsuario(updatedUser) { success, error ->
+                    if (success) {
+                        println("Perfil actualizado correctamente")
+                        // Muestra un mensaje o vuelve atrás si quieres
+                    } else {
+                        println("Error actualizando perfil: $error")
+                    }
+                }
+            },
             colors = ButtonDefaults.buttonColors(Color(0xFF4A90E2)),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -163,7 +189,7 @@ fun EditProfileScreen(navController: NavController, user: User?) {
 }
 
 @Composable
-fun ProfileTextField(label: String, value: String, trailingIcon: ImageVector? = null) {
+fun ProfileTextField(label: String, value: String, /*trailingIcon: ImageVector? = null*/onValueChange: (String) -> Unit) {
     Column {
         Text(text = label, fontWeight = FontWeight.Bold)
         OutlinedTextField(
@@ -177,7 +203,7 @@ fun ProfileTextField(label: String, value: String, trailingIcon: ImageVector? = 
 }
 
 @Composable
-fun ProfileDropdown(label: String, initialValue: String = "") {
+fun ProfileDropdown(label: String, initialValue: String = "", onValueChange: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(initialValue) }
 
