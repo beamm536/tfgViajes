@@ -1,9 +1,11 @@
 package com.appclass.myapplication.ui.screens.registro
 
+import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,9 +18,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,7 +48,10 @@ import com.appclass.myapplication.R
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
+import java.util.Calendar
 import androidx.compose.material3.IconButton as IconButton1
+
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher: @Composable () -> Unit){
@@ -139,6 +146,30 @@ fun CamposRegistro(
 
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val viewModel: RegistroViewModel = viewModel() //para la llamada a la funcion para la validacion de edad en el registro
+
+    var fechaNacimiento by remember { mutableStateOf("") }
+
+    val datePicker = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
+                if (viewModel.validacionMayorEdad(selectedDate)) {
+                    onFechaNacimientoChanged(selectedDate)
+                } else {
+                    Toast.makeText(context, "Debes tener al menos 18 años", Toast.LENGTH_SHORT).show()
+                }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,13 +197,19 @@ fun CamposRegistro(
             )
         }
 
+//        CalendarioRegistro(
+//            fechaNacimiento = fechaNacimiento,
+//            onFechaNacimientoChanged = onFechaNacimientoChanged
+//        )
         OutlinedTextField(
             value = fechaNacimiento,
-            onValueChange = { onFechaNacimientoChanged(it) },
+            onValueChange = { }, // onFechaNacimientoChanged(it) le quitamos esto y asi evitamos que se sobreescriba
             label = { Text("Birth of date (DD/MM/YYYY)") },
             shape = RoundedCornerShape(12.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { datePicker.show() },
             //todo -->datepicker y que no sea menor de 18 años
         )
 
@@ -283,3 +320,62 @@ fun FuncionesRegistro(
         }
     }
 }
+
+
+//@Composable
+//fun CalendarioRegistro(
+//    fechaNacimiento: String,
+//    onFechaNacimientoChanged: (String) -> Unit
+//) {
+//    val context = LocalContext.current
+//    val calendar = Calendar.getInstance()
+//
+//    // Intenta usar la fecha existente como predeterminada si está disponible
+//    if (fechaNacimiento.isNotEmpty()) {
+//        try {
+//            val partes = fechaNacimiento.split("/")
+//            val day = partes[0].toInt()
+//            val month = partes[1].toInt() - 1 // Enero = 0
+//            val year = partes[2].toInt()
+//            calendar.set(year, month, day)
+//        } catch (e: Exception) {
+//            // Si falla, simplemente usa la fecha actual
+//        }
+//    }
+//
+//    val year = calendar.get(Calendar.YEAR)
+//    val month = calendar.get(Calendar.MONTH)
+//    val day = calendar.get(Calendar.DAY_OF_MONTH)
+//
+//    val showDatePicker = remember { mutableStateOf(false) }
+//
+//    if (showDatePicker.value) {
+//        DatePickerDialog(
+//            context,
+//            { _ , selectedYear, selectedMonth, selectedDay ->
+//                val fecha = "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
+//                onFechaNacimientoChanged(fecha)
+//                showDatePicker.value = false
+//            },
+//            year, month, day
+//        ).show()
+//    }
+//
+//    OutlinedTextField(
+//        value = fechaNacimiento,
+//        onValueChange = {},
+//        label = { Text("Fecha de nacimiento") },
+//        readOnly = true,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .clickable { showDatePicker.value = true },
+//        trailingIcon = {
+//            IconButton(onClick = { showDatePicker.value = true }) {
+//                Icon(
+//                    imageVector = Icons.Default.DateRange,
+//                    contentDescription = "Seleccionar fecha"
+//                )
+//            }
+//        }
+//    )
+//}
