@@ -25,11 +25,15 @@ class AuthRepository {
         nombre: String,
         apellidos: String,
         fechaNacimiento: String,
+        genero: String,
         email: String,
         password: String,
         callback: (Boolean, String?) -> Unit
     ){
-        auth.createUserWithEmailAndPassword(email, password)
+
+        Log.d("Registro", "Intentando registrar usuario con email: $email")
+
+        auth.createUserWithEmailAndPassword(email.trim(), password)//nuevo metodo añadido :)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val usuario =auth.currentUser
@@ -40,15 +44,29 @@ class AuthRepository {
                             "nombre" to nombre,
                             "apellidos" to apellidos,
                             "fechaNacimiento" to fechaNacimiento,
+                            "genero" to genero,
                             "email" to email
                         )
+
+                        Log.d("Registro", "Usuario creado en Auth con UID: $uid")
+
                         //guardamos en la coleccion de usuarios
                         dbFirestore.collection("usuariosTFG")
                             .document(uid)
                             .set(dataUser)
-                            .addOnSuccessListener { callback(true, null) } //registrado correctamente ^^
-                            .addOnFailureListener { callback(false, it.message) }//error
-                    }
+                            .addOnSuccessListener {
+                                Log.d("Registro", "Datos guardados en Firestore para UID: $uid")
+                                callback(true, null)
+                            } //registrado correctamente ^^
+                            .addOnFailureListener {
+                                Log.e("Registro", "Error al guardar datos en Firestore: ${it.message}")
+                                callback(false, it.message)
+                            }//error
+                        } ?: run {
+                            Log.e("Registro", "Error al registrar usuario: ${task.exception?.message}")
+                            callback(false, "Usuario nulo tras registro")
+
+                        }
 
                 } else {
                     callback(false, task.exception?.message) //error

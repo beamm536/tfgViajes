@@ -1,5 +1,6 @@
 package com.appclass.myapplication.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -36,7 +37,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.MapBox.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -63,7 +64,14 @@ fun NavigationWrapper (navController: NavHostController) {
             Registro(
                 viewModel = registroViewModel,
                 switcher = { LoginSignUpSwitcher(authViewModel) },
-                navigateToHome = { navController.navigate(AppScreens.Login.ruta) }
+                navigateToHome = {
+                    Log.d("Navigation", "🎯 ¡NavigateToHome ejecutado!")
+                    navController.navigate(NavItem.Profile.route){
+                        popUpTo(AppScreens.Registro.ruta) { inclusive = true }
+                    }
+                    //todo: si no funciona probar con esto --> navController.navigate("profile")
+                }
+               // navigateToHome = { navController.navigate(AppScreens.EditarPerfil.ruta) }
             )
         }
 

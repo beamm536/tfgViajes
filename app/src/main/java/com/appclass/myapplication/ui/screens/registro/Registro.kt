@@ -1,5 +1,7 @@
 package com.appclass.myapplication.ui.screens.registro
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,11 +53,23 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
     val nombre: String by viewModel.nombre.observeAsState(initial = "")
     val apellidos: String by viewModel.apellidos.observeAsState(initial = "")
     val fechaNacimiento: String by viewModel.fechaNacimiento.observeAsState(initial = "")
+    val genero: String by viewModel.genero.observeAsState(initial = "")
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val registroEnable: Boolean by viewModel.registroEnable.observeAsState(initial = false) //nuestro boton empieza deshabilitado
 
     var passwordVisible by remember { mutableStateOf(false) }
+
+    /**
+     * funcion creada pq everything me ha dado error, a lo qe respecta de la navegación después del registro de un nuevo usaurio dentro de la app
+     */
+    val registroExitoso by viewModel.registroExitoso.observeAsState()
+    LaunchedEffect(registroExitoso) {
+        if (registroExitoso == true) {
+            Log.d("Registro", "🔥 LiveData detectó éxito. Navegando.")
+            navigateToHome()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -74,6 +90,7 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
                 nombre = nombre,
                 apellidos = apellidos,
                 fechaNacimiento = fechaNacimiento,
+                genero = genero,
                 email = email,
                 password = password,
 
@@ -111,6 +128,8 @@ fun CamposRegistro(
     onApellidosChanged: (String) -> Unit,
     fechaNacimiento: String,
     onFechaNacimientoChanged: (String) -> Unit,
+    genero: String,
+    onGeneroChanged: (String) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
     password: String,
@@ -204,11 +223,14 @@ fun FuncionesRegistro(
     nombre: String,
     apellidos: String,
     fechaNacimiento: String,
+    genero: String,
     email: String,
     password: String,
     registroEnable: Boolean,
     onLoginSuccess: () -> Unit
 ){
+    val context = LocalContext.current
+
 
     Column(
         modifier = Modifier
@@ -227,7 +249,9 @@ fun FuncionesRegistro(
             onApellidosChanged = { viewModel.onApellidosChanged(it) },
             fechaNacimiento = fechaNacimiento,
             onFechaNacimientoChanged = { viewModel.onFechaNacimientoChanged(it) },
-            email = email,
+            genero = genero,
+            onGeneroChanged = { viewModel.onGeneroChanged(it) },
+            email = email, //ANTES - email ---- cambiado para pruebas "user${System.currentTimeMillis()}@gmail.com"
             onEmailChanged = { viewModel.onEmailChanged(it) },
             password = password,
             onPasswordChanged = { viewModel.onPasswordChanged(it) },
@@ -237,13 +261,17 @@ fun FuncionesRegistro(
         Button(
             onClick = {
                 viewModel.registrarUsuaario(
-                    nombre, apellidos, fechaNacimiento, email, password
+                    nombre, apellidos, fechaNacimiento, genero,email, password
                 ) { success, errorMessage ->
+                    Log.d("Registro", "callback result: success=$success, error=$errorMessage")
+
                     if (success) {
-                        onLoginSuccess() // Navegar a Home
+                        Log.d("Registro", "Registro exitoso. Llamando a onLoginSuccess()")
+                        onLoginSuccess()
                     } else {
-                        // TODO: Mostrar mensaje de error en la UI
-                        println("Error: $errorMessage")
+                        Log.e("Registro", "Error en registro: $errorMessage")
+
+                        Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
                     }
                 }
             },

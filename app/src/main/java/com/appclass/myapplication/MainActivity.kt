@@ -25,12 +25,6 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 navHostController = rememberNavController()
                 NavigationWrapper(navHostController)
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
             }
         }
     }
