@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appclass.myapplication.data.AuthRepository
+import java.util.Calendar
 
 class RegistroViewModel: ViewModel() {
 
@@ -54,7 +55,17 @@ class RegistroViewModel: ViewModel() {
 
     fun onNombreChanged(nombre: String) { _nombre.value = nombre }
     fun onApellidosChanged(apellidos: String) { _apellidos.value = apellidos }
-    fun onFechaNacimientoChanged(fechaNacimiento: String) { _fechaNacimiento.value = fechaNacimiento }
+
+    //fun onFechaNacimientoChanged(fechaNacimiento: String) { _fechaNacimiento.value = fechaNacimiento }
+    fun onFechaNacimientoChanged(fechaNacimiento: String) {
+        if (validacionMayorEdad(fechaNacimiento)) {
+            _fechaNacimiento.value = fechaNacimiento
+        } else {
+            _fechaNacimiento.value = "" // o puedes guardar y mostrar el error también
+            Log.e("Edad", "El usuario no tiene al menos 18 años")
+        }
+    }
+
     fun onGeneroChanged(genero: String) { _genero.value = genero }
 
     fun onEmailChanged(email: String) {
@@ -87,6 +98,26 @@ class RegistroViewModel: ViewModel() {
         authRepository.registrarUsuario(nombre, apellidos, fechaNacimiento, genero, email, password) { success, errorMsg ->
             _registroExitoso.postValue(success) // Actualizamos LiveData
             callback(success, errorMsg) // También seguimos usando el callback si lo necesitás en la vista
+        }
+    }
+
+    fun validacionMayorEdad(fechaNacimiento: String): Boolean {
+        return try {
+            val formato = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+            val fecha = formato.parse(fechaNacimiento)
+
+            val hoy = Calendar.getInstance()
+            val fechaNac = Calendar.getInstance().apply { time = fecha }
+
+            val edad = hoy.get(Calendar.YEAR) - fechaNac.get(Calendar.YEAR)
+
+            if (hoy.get(Calendar.DAY_OF_YEAR) < fechaNac.get(Calendar.DAY_OF_YEAR)) {
+                edad - 1 >= 18
+            } else {
+                edad >= 18
+            }
+        } catch (e: Exception){
+            false
         }
     }
 
