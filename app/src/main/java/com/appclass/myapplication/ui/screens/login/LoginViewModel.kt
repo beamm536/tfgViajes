@@ -1,5 +1,6 @@
 package com.appclass.myapplication.ui.screens.login
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,13 +52,16 @@ class LoginViewModel: ViewModel(){
     private fun isValidPassword(password: String): Boolean = password.length >= 6
 
 
-    fun onLoginSelected(afterLogin: () -> Unit) {
+    fun onLoginSelected(afterLogin: () -> Unit, onLoginResult: (Boolean, String) -> Unit ) {
         val emailValue = _email.value ?: ""
         val passwordValue = _password.value ?: ""
 
-        authRepository.iniciarSesion(emailValue, passwordValue) { success, _ ->
+        authRepository.iniciarSesion(emailValue, passwordValue) { success, errorMessage ->
             if (success) {
+                Log.d("LoginViewModel", "Login exitoso para el usuario: $emailValue")
                 afterLogin()
+            } else {
+                Log.e("LoginViewModel", "Error en el login: $errorMessage")
             }
         }
     }
