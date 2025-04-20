@@ -1,7 +1,11 @@
 package com.appclass.myapplication.ui.screens.registro
 
+import android.app.DatePickerDialog
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +18,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,7 +48,10 @@ import com.appclass.myapplication.R
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.theme.txtBlack
+import java.util.Calendar
 import androidx.compose.material3.IconButton as IconButton1
+
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher: @Composable () -> Unit){
@@ -49,11 +60,23 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
     val nombre: String by viewModel.nombre.observeAsState(initial = "")
     val apellidos: String by viewModel.apellidos.observeAsState(initial = "")
     val fechaNacimiento: String by viewModel.fechaNacimiento.observeAsState(initial = "")
+    val genero: String by viewModel.genero.observeAsState(initial = "")
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val registroEnable: Boolean by viewModel.registroEnable.observeAsState(initial = false) //nuestro boton empieza deshabilitado
 
     var passwordVisible by remember { mutableStateOf(false) }
+
+    /**
+     * funcion creada pq everything me ha dado error, a lo qe respecta de la navegación después del registro de un nuevo usaurio dentro de la app
+     */
+    val registroExitoso by viewModel.registroExitoso.observeAsState()
+    LaunchedEffect(registroExitoso) {
+        if (registroExitoso == true) {
+            Log.d("Registro", "🔥 LiveData detectó éxito. Navegando.")
+            navigateToHome()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -74,6 +97,7 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
                 nombre = nombre,
                 apellidos = apellidos,
                 fechaNacimiento = fechaNacimiento,
+                genero = genero,
                 email = email,
                 password = password,
 
@@ -104,6 +128,7 @@ fun TxtsInicioRegistro(){
 }
 @Composable
 fun CamposRegistro(
+    viewModel: RegistroViewModel,
     authViewModel: AuthViewModel,
     nombre: String,
     onNombreChanged: (String) -> Unit,
@@ -111,6 +136,8 @@ fun CamposRegistro(
     onApellidosChanged: (String) -> Unit,
     fechaNacimiento: String,
     onFechaNacimientoChanged: (String) -> Unit,
+    genero: String,
+    onGeneroChanged: (String) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
     password: String,
@@ -119,6 +146,30 @@ fun CamposRegistro(
 ){
 
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+   // val viewModel: RegistroViewModel = viewModel() //para la llamada a la funcion para la validacion de edad en el registro
+
+    //var fechaNacimiento by remember { mutableStateOf("") }
+
+//    val datePicker = remember {
+//        DatePickerDialog(
+//            context,
+//            { _, year, month, dayOfMonth ->
+//                val selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
+//                if (viewModel.validacionMayorEdad(selectedDate)) {
+//                    onFechaNacimientoChanged(selectedDate)
+//                } else {
+//                    Toast.makeText(context, "Debes tener al menos 18 años", Toast.LENGTH_SHORT).show()
+//                }
+//            },
+//            calendar.get(Calendar.YEAR),
+//            calendar.get(Calendar.MONTH),
+//            calendar.get(Calendar.DAY_OF_MONTH)
+//        )
+//    }
 
     Column(
         modifier = Modifier
@@ -147,14 +198,10 @@ fun CamposRegistro(
             )
         }
 
-        OutlinedTextField(
-            value = fechaNacimiento,
-            onValueChange = { onFechaNacimientoChanged(it) },
-            label = { Text("Birth of date (DD/MM/YYYY)") },
-            shape = RoundedCornerShape(12.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth(),
-            //todo -->datepicker y que no sea menor de 18 años
+        CalendarioRegistro(
+            fechaNacimiento = fechaNacimiento,
+            onFechaNacimientoChanged = onFechaNacimientoChanged,
+            viewModel = viewModel
         )
 
         OutlinedTextField(
@@ -186,13 +233,6 @@ fun CamposRegistro(
             modifier = Modifier.fillMaxWidth()
         )
 
-//        Button(
-//            onClick = { /**/ },
-//            modifier = Modifier.fillMaxWidth(),
-//            colors = ButtonDefaults.buttonColors( Color.Blue)
-//        ) {
-//            Text("Register", color = Color.White)
-//        }
     }
 }
 
@@ -204,11 +244,14 @@ fun FuncionesRegistro(
     nombre: String,
     apellidos: String,
     fechaNacimiento: String,
+    genero: String,
     email: String,
     password: String,
     registroEnable: Boolean,
     onLoginSuccess: () -> Unit
 ){
+    val context = LocalContext.current
+
 
     Column(
         modifier = Modifier
@@ -220,6 +263,7 @@ fun FuncionesRegistro(
         TxtsInicioRegistro()
         switcher()
         CamposRegistro(
+            viewModel = viewModel,
             authViewModel = AuthViewModel(),
             nombre = nombre,
             onNombreChanged = { viewModel.onNombreChanged(it) },
@@ -227,7 +271,9 @@ fun FuncionesRegistro(
             onApellidosChanged = { viewModel.onApellidosChanged(it) },
             fechaNacimiento = fechaNacimiento,
             onFechaNacimientoChanged = { viewModel.onFechaNacimientoChanged(it) },
-            email = email,
+            genero = genero,
+            onGeneroChanged = { viewModel.onGeneroChanged(it) },
+            email = email, //ANTES - email ---- cambiado para pruebas "user${System.currentTimeMillis()}@gmail.com"
             onEmailChanged = { viewModel.onEmailChanged(it) },
             password = password,
             onPasswordChanged = { viewModel.onPasswordChanged(it) },
@@ -237,13 +283,17 @@ fun FuncionesRegistro(
         Button(
             onClick = {
                 viewModel.registrarUsuaario(
-                    nombre, apellidos, fechaNacimiento, email, password
+                    nombre, apellidos, fechaNacimiento, genero,email, password
                 ) { success, errorMessage ->
+                    Log.d("Registro", "callback result: success=$success, error=$errorMessage")
+
                     if (success) {
-                        onLoginSuccess() // Navegar a Home
+                        Log.d("Registro", "Registro exitoso. Llamando a onLoginSuccess()")
+                        onLoginSuccess()
                     } else {
-                        // TODO: Mostrar mensaje de error en la UI
-                        println("Error: $errorMessage")
+                        Log.e("Registro", "Error en registro: $errorMessage")
+
+                        Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
                     }
                 }
             },
@@ -255,3 +305,65 @@ fun FuncionesRegistro(
         }
     }
 }
+
+
+@Composable
+fun CalendarioRegistro(
+    fechaNacimiento: String,
+    onFechaNacimientoChanged: (String) -> Unit,
+    viewModel: RegistroViewModel
+) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    if (fechaNacimiento.isNotEmpty()) {
+        try {
+            val partes = fechaNacimiento.split("/")
+            val day = partes[0].toInt()
+            val month = partes[1].toInt() - 1
+            val year = partes[2].toInt()
+            calendar.set(year, month, day)
+        } catch (e: Exception) { }
+    }
+
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val showDatePicker = remember { mutableStateOf(false) }
+
+    if (showDatePicker.value) {
+        DatePickerDialog(
+            context,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val fecha = "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
+                if (viewModel.validacionMayorEdad(fecha)) {
+                    onFechaNacimientoChanged(fecha)
+                } else {
+                    Toast.makeText(context, "Debes tener al menos 18 años", Toast.LENGTH_SHORT).show()
+                }
+                showDatePicker.value = false
+            },
+            year, month, day
+        ).show()
+    }
+
+    OutlinedTextField(
+        value = fechaNacimiento,
+        onValueChange = { }, // El usuario no puede escribir directamente
+        label = { Text("Fecha de nacimiento") },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDatePicker.value = true },
+        trailingIcon = {
+            IconButton(onClick = { showDatePicker.value = true }) {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Seleccionar fecha"
+                )
+            }
+        }
+    )
+}
+

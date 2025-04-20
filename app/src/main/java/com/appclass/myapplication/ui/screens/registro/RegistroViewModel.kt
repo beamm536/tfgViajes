@@ -1,10 +1,12 @@
 package com.appclass.myapplication.ui.screens.registro
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appclass.myapplication.data.AuthRepository
+import java.util.Calendar
 
 class RegistroViewModel: ViewModel() {
 
@@ -22,40 +24,55 @@ class RegistroViewModel: ViewModel() {
 //            }
 //    }
 
-    private val _nombre= MutableLiveData<String>()
+    private val _nombre = MutableLiveData<String>()
     val nombre: LiveData<String> = _nombre
 
-    private val _apellidos= MutableLiveData<String>()
+    private val _apellidos = MutableLiveData<String>()
     val apellidos: LiveData<String> = _apellidos
 
-    private val _fechaNacimiento= MutableLiveData<String>()
+    private val _fechaNacimiento = MutableLiveData<String>()
     val fechaNacimiento: LiveData<String> = _fechaNacimiento
 
-    private val _email= MutableLiveData<String>()
+    private val _genero = MutableLiveData<String>()
+    val genero: LiveData<String> = _genero
+
+    private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
 
-    private val _password= MutableLiveData<String>()
+    private val _password = MutableLiveData<String>()
     val password: LiveData<String> = _password
 
-
-    private val _registroEnable= MutableLiveData<Boolean>()
+    private val _registroEnable = MutableLiveData<Boolean>()
     val registroEnable: LiveData<Boolean> = _registroEnable
 
+    // Nuevo LiveData para saber si el registro fue exitoso
+    private val _registroExitoso = MutableLiveData<Boolean>()
+    val registroExitoso: LiveData<Boolean> = _registroExitoso
 
-    fun onNombreChanged(nombre: String) {
-        _nombre.value = nombre
-    }
-    fun onApellidosChanged(apellidos: String) {
-        _apellidos.value = apellidos
-    }
+
+    private val authRepository = AuthRepository()
+
+
+    fun onNombreChanged(nombre: String) { _nombre.value = nombre }
+    fun onApellidosChanged(apellidos: String) { _apellidos.value = apellidos }
+
+    //fun onFechaNacimientoChanged(fechaNacimiento: String) { _fechaNacimiento.value = fechaNacimiento }
     fun onFechaNacimientoChanged(fechaNacimiento: String) {
-        _fechaNacimiento.value = fechaNacimiento
+        if (validacionMayorEdad(fechaNacimiento)) {
+            _fechaNacimiento.value = fechaNacimiento
+        } else {
+            _fechaNacimiento.value = "" // o puedes guardar y mostrar el error también
+            Log.e("Edad", "El usuario no tiene al menos 18 años")
+        }
     }
+
+    fun onGeneroChanged(genero: String) { _genero.value = genero }
 
     fun onEmailChanged(email: String) {
         _email.value = email
         _registroEnable.value = isValidEmail(email) && isValidPassword(_password.value ?: "")
     }
+
     fun onPasswordChanged(password: String) {
         _password.value = password
         _registroEnable.value = isValidEmail(_email.value ?: "") && isValidPassword(password)
@@ -64,22 +81,44 @@ class RegistroViewModel: ViewModel() {
     private fun isValidEmail(email: String): Boolean = Patterns.EMAIL_ADDRESS.matcher(email).matches()
     private fun isValidPassword(password: String): Boolean = password.length >= 6
 
+    fun registrarUsuaario(
+        nombre: String,
+        apellidos: String,
+        fechaNacimiento: String,
+        genero: String,
+        email: String,
+        password: String,
+        callback: (Boolean, String?) -> Unit
+    ){
 
-    /*TODO
-       1.- funciones para el correo y la contraseña
-       2.- funcion de verficacion de fecha de nacimiento
-       3.- funcion de habilitar el boton de registro
-     */
+        Log.d("RegistroViewModel", "Llamando a registrarUsuario() desde ViewModel con email: $email")
 
-
-
-//--------------------------------------------------------------
-
-    private val authRepository = AuthRepository()
-
-    fun registrarUsuaario(nombre: String, apellidos: String, fechaNacimiento: String, email: String, password: String, callback: (Boolean, String?) -> Unit){
         //llamamos a la funcion YA CREADA de nuestra clase AuthRepository
-        authRepository.registrarUsuario(nombre, apellidos, fechaNacimiento, email, password, callback)
+       // authRepository.registrarUsuario(nombre, apellidos, fechaNacimiento, genero,email, password, callback)
+        authRepository.registrarUsuario(nombre, apellidos, fechaNacimiento, genero, email, password) { success, errorMsg ->
+            _registroExitoso.postValue(success) // Actualizamos LiveData
+            callback(success, errorMsg) // También seguimos usando el callback si lo necesitás en la vista
+        }
+    }
+
+    fun validacionMayorEdad(fechaNacimiento: String): Boolean {
+        return try {
+            val formato = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+            val fecha = formato.parse(fechaNacimiento)
+
+            val hoy = Calendar.getInstance()
+            val fechaNac = Calendar.getInstance().apply { time = fecha }
+
+            val edad = hoy.get(Calendar.YEAR) - fechaNac.get(Calendar.YEAR)
+
+            if (hoy.get(Calendar.DAY_OF_YEAR) < fechaNac.get(Calendar.DAY_OF_YEAR)) {
+                edad - 1 >= 18
+            } else {
+                edad >= 18
+            }
+        } catch (e: Exception){
+            false
+        }
     }
 
 }
