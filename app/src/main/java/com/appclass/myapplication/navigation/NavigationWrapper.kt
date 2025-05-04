@@ -13,6 +13,7 @@ import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
+import com.appclass.myapplication.ui.screens.home.PruebaExplorarLugaresScreen
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
 import com.appclass.myapplication.ui.screens.mapbox.MapBox
@@ -37,7 +38,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Auth.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.MapOnly.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -131,6 +132,12 @@ fun NavigationWrapper (navController: NavHostController) {
             val lon = backStackEntry.arguments?.getString("lon")?.toDoubleOrNull() ?: 0.0
 
             DetalleMapaScreen(nombre, lat, lon, viewModel())
+        }
+
+
+
+        composable(AppScreens.PruebaExplorarLugares.ruta) {
+            PruebaExplorarLugaresScreen(navController)
         }
     }
 }

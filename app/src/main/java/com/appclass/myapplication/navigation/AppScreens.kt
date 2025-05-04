@@ -17,4 +17,6 @@ sealed class AppScreens(val ruta: String) {
         }
     }
 
+    object PruebaExplorarLugares : AppScreens("PruebaExplorarLugares")
+
 }
