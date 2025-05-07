@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 //configuracion de RETROFIT
 
-object RetrofitInstance {
+object  RetrofitInstance {
     private const val BASE_URL = "https://api.mapbox.com/"
     private const val MAPBOX_TOKEN = "pk.eyJ1Ijoid2F4ZXI1OSIsImEiOiJjbDMzZHJiN2cwdDA1M2pwOXlkbzVhb3kxIn0.lXwAZCDn_G9GNKcxWzYE7g"  //token de hugo :)
 

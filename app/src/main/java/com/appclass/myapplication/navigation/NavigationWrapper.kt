@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
+import com.appclass.myapplication.ui.screens.amadeus.RecommendationsScreen
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
@@ -38,7 +39,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.MapOnly.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.Recomendaciones.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -138,6 +139,11 @@ fun NavigationWrapper (navController: NavHostController) {
 
         composable(AppScreens.PruebaExplorarLugares.ruta) {
             PruebaExplorarLugaresScreen(navController)
+        }
+
+
+        composable(AppScreens.Recomendaciones.ruta) {
+            RecommendationsScreen(navController)
         }
     }
 }
