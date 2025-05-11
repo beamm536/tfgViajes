@@ -13,6 +13,8 @@ import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.LoginSignUpSwitcher
+import com.appclass.myapplication.ui.screens.googleplacesdetails.PlaceDetails
+import com.appclass.myapplication.ui.screens.googleplacesdetails.PlaceDetailsViewModel
 import com.appclass.myapplication.ui.screens.home.PruebaExplorarLugaresScreen
 import com.appclass.myapplication.ui.screens.login.Login
 import com.appclass.myapplication.ui.screens.login.LoginViewModel
@@ -36,9 +38,11 @@ fun NavigationWrapper (navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
+    val placeDetailsViewModel: PlaceDetailsViewModel = viewModel()
+
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.MapOnly.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.PlaceDetailsGoogle.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -138,6 +142,10 @@ fun NavigationWrapper (navController: NavHostController) {
 
         composable(AppScreens.PruebaExplorarLugares.ruta) {
             PruebaExplorarLugaresScreen(navController)
+        }
+
+        composable(AppScreens.PlaceDetailsGoogle.ruta){
+            PlaceDetails(navController, viewModel())
         }
     }
 }

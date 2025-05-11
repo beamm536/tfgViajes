@@ -11,6 +11,8 @@ sealed class AppScreens(val ruta: String) {
     object EditarPerfil: AppScreens("EditarPerfil")
     object MapOnly: AppScreens("MapOnlyScreen")
 
+    object PlaceDetailsGoogle: AppScreens("PlaceDetails")
+
     object DetalleMapa : AppScreens("detalleMapa/{nombre}/{lat}/{lon}") {
         fun createRoute(nombre: String, lat: Double, lon: Double): String {
             return "detalleMapa/$nombre/$lat/$lon"
