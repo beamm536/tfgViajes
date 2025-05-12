@@ -17,18 +17,34 @@ import androidx.compose.ui.graphics.Color
 
 import coil.compose.rememberAsyncImagePainter
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.navigation.NavBackStackEntry
+import com.appclass.myapplication.data_api.model.googlePlaces.PlaceItem
+import com.appclass.myapplication.data_api.model.googlePlaces.featuredPlaces
+
 
 @Composable
-fun PlaceDetails(navController: NavHostController, viewModel: PlaceDetailsViewModel) {
-    //val place = viewModel.placeResult
+fun PlaceDetails(
+    navController: NavHostController,
+    viewModel: PlaceDetailsViewModel,
+    navBackStackEntry: NavBackStackEntry
+) {
+
+    val placeId = navBackStackEntry.arguments?.getString("placeId")
     val place by viewModel.placeResult.collectAsState()
-    val apiKey = "AIzaSyBWNsg0IDYVrLyi3KokioyvmvCu6iH78AM" // Mejor si lo pasas como argumento
+    val apiKey = "AIzaSyBWNsg0IDYVrLyi3KokioyvmvCu6iH78AM"
+
+    LaunchedEffect(placeId) {
+        placeId?.let { viewModel.fetchPlaceDetails(it, apiKey) }
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        place?.let { it ->
-            // Mostrar imagen si hay photo_reference
-            val photoReference = it.photos?.firstOrNull()?.photo_reference
-            photoReference?.let { ref ->
+        place?.let {
+            it.photos?.firstOrNull()?.photo_reference?.let { ref ->
                 val imageUrl = buildImageUrl(ref, apiKey)
                 Image(
                     painter = rememberAsyncImagePainter(imageUrl),
@@ -40,7 +56,6 @@ fun PlaceDetails(navController: NavHostController, viewModel: PlaceDetailsViewMo
                 )
             }
 
-            // Mostrar el resto de datos
             Text(text = "📍 Nombre: ${it.name}")
             Text(text = "📫 Dirección: ${it.formatted_address}")
             Text(text = "⭐ Rating: ${it.rating ?: "No disponible"}")
@@ -52,9 +67,9 @@ fun PlaceDetails(navController: NavHostController, viewModel: PlaceDetailsViewMo
             it.website?.let { site ->
                 Text(text = "\n🌐 Sitio Web: $site", color = Color.Blue)
             }
-
-        } ?: Text("No se ha cargado ningún lugar.")
-
-
+        } ?: Text("Cargando detalles del lugar...")
     }
 }
+
+
+
