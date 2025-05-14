@@ -147,7 +147,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
         composable(
            // AppScreens.PlaceDetailsGoogle.ruta
-            route = "placeDetails/{placeId}",
+            route = "placeDetails/{placeId}", //definimos la ruta con el parametro >>> ya que navegamos a una vista en la cual la informacion cambia segun el parametro que le proporcionemos
             arguments = listOf(navArgument("placeId") { type = NavType.StringType })
         ){ backStackEntry ->
             PlaceDetails(
