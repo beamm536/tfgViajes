@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items // JODERRR CUIDADO CON LOS IMPORTSSS :)
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,45 +44,63 @@ fun Places(navController: NavHostController){
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        GridDestinosEstaticos(navController, modifier = Modifier)
 
-
+        // DESTINOS ESTATICOS - EN LISTA
 //        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 //            items(featuredPlaces) { place ->
 //                Card(
 //                    modifier = Modifier
 //                        .fillMaxWidth()
 //                        .clickable {
-//                            viewModel.fetchPlaceDetails(place.placeId, apiKey)
-//                            navController.navigate("placeDetails")
+//                            navController.navigate("placeDetails/${place.placeId}")
 //                        },
 //                    elevation = CardDefaults.cardElevation(4.dp)
 //                ) {
 //                    Column(modifier = Modifier.padding(16.dp)) {
 //                        Text(text = place.name, style = MaterialTheme.typography.titleMedium)
-//                        Text(text = "Pulsa para ver detalles", style = MaterialTheme.typography.bodySmall)
+//                        Text(
+//                            text = "Pulsa para ver detalles",
+//                            style = MaterialTheme.typography.bodySmall
+//                        )
 //                    }
 //                }
 //            }
 //        }
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(featuredPlaces) { place ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate("placeDetails/${place.placeId}")
-                        },
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = place.name, style = MaterialTheme.typography.titleMedium)
-                        Text(
-                            text = "Pulsa para ver detalles",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
+
+
+
+    }
+}
+
+
+@Composable
+fun GridDestinosEstaticos(navController: NavHostController, modifier: Modifier = Modifier){
+    //DESTINOS ESTATICOS - GRID >>> LazyVerticalGrid
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2), //2 columnas estaticas
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(featuredPlaces) { place ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        navController.navigate("placeDetails/${place.placeId}")
+                    },
+                elevation = CardDefaults.cardElevation(4.dp)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(text = place.name, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = "Pulsa para ver detalles",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }
+
     }
 }
