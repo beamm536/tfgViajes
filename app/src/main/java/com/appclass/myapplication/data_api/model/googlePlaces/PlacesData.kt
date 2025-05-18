@@ -20,11 +20,11 @@ val featuredPlaces = listOf(
 //    PlaceItem("ChIJkU4d0tMGfDURqGq2bnjz0a8", "Coliseo de Roma") //no termina de cargar
 
     PlaceItem("ChIJLU7jZClu5kcR4PcOOO6p3I0", "Torre Eiffel", "https://upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg"),
-    PlaceItem("ChIJKxDbe_lYwokRVf__s8CPn-o", "Museo de Arte Moderno", "https://upload.wikimedia.org/wikipedia/commons/9/94/MoMA_entrance.jpg"),
-    PlaceItem("ChIJOwg_06VPwokRYv534QaPC8g", "New York", "https://upload.wikimedia.org/wikipedia/commons/c/c7/Lower_Manhattan_from_Jersey_City_November_2014_panorama_3.jpg"),
-    PlaceItem("ChIJZQ4Z3n1-3YgR0E7HW9MTLvc", "Florida", "https://upload.wikimedia.org/wikipedia/commons/0/0a/Miami_Beach_20100424.jpg"),
-    PlaceItem("ChIJ2dGMjMMEdkgRqVq9pZ6v7oU", "Big Ben", "https://upload.wikimedia.org/wikipedia/commons/f/f9/Elizabeth_Tower%2C_London_-_May_2007.jpg"),
-    PlaceItem("ChIJZQ4Z3n1-3YgR0E7HW9MTLvc", "California", "https://upload.wikimedia.org/wikipedia/commons/0/0e/GoldenGateBridge-001.jpg"),
+    PlaceItem("ChIJKxDbe_lYwokRVf__s8CPn-o", "Museo de Arte Moderno HOLAAAA???", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Pano_Lake_Louise_Summer.jpg/1280px-Pano_Lake_Louise_Summer.jpg"),
+    PlaceItem("ChIJOwg_06VPwokRYv534QaPC8g", "New York", "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/800px-Cat_poster_1.jpg"),
+    PlaceItem("ChIJZQ4Z3n1-3YgR0E7HW9MTLvc", "Florida", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Salmon_sushi_nigiri.jpg/1280px-Salmon_sushi_nigiri.jpg"),
+    PlaceItem("ChIJ2dGMjMMEdkgRqVq9pZ6v7oU", "Big Ben", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Andromeda_Galaxy_%28with_cropped_background%29.jpg/1280px-Andromeda_Galaxy_%28with_cropped_background%29.jpg"),
+    PlaceItem("ChIJZQ4Z3n1-3YgR0E7HW9MTLvc", "California", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/800px-A_small_cup_of_coffee.JPG"),
     PlaceItem("ChIJkU4d0tMGfDURqGq2bnjz0a8", "Coliseo de Roma", "https://upload.wikimedia.org/wikipedia/commons/d/de/Colosseo_2020.jpg")
 
 )
