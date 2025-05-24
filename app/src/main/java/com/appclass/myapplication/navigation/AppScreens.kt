@@ -21,5 +21,6 @@ sealed class AppScreens(val ruta: String) {
     }
 
     object PruebaExplorarLugares : AppScreens("PruebaExplorarLugares")
+    object PlacesRecomendacionesScreen : AppScreens("PlacesRecomendacionesScreen")
 
 }
