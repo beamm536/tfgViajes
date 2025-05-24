@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRecomendaciones
 import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
@@ -22,6 +23,8 @@ import com.appclass.myapplication.ui.screens.login.LoginViewModel
 import com.appclass.myapplication.ui.screens.mapbox.MapBox
 import com.appclass.myapplication.ui.screens.mapbox.MapBoxScreen
 import com.appclass.myapplication.ui.screens.mapbox.detalleMapa.DetalleMapaScreen
+import com.appclass.myapplication.ui.screens.recomendacionesXgps.PlacesRecomendacionesScreen
+import com.appclass.myapplication.ui.screens.recomendacionesXgps.PlacesRecomendacionesViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 import com.appclass.myapplication.ui.screens.userProfile.Usuario
@@ -40,10 +43,11 @@ fun NavigationWrapper (navController: NavHostController) {
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
     val placeDetailsViewModel: PlaceDetailsViewModel = viewModel()
+    val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.Places.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.PlacesRecomendacionesScreen.ruta){
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -159,6 +163,10 @@ fun NavigationWrapper (navController: NavHostController) {
 
         composable(AppScreens.Places.ruta){
             Places(navController)
+        }
+
+        composable (AppScreens.PlacesRecomendacionesScreen.ruta){
+            PlacesRecomendacionesScreen(navController, viewModel())
         }
     }
 }
