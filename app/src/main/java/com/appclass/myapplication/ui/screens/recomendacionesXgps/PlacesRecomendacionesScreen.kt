@@ -23,11 +23,13 @@ import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRe
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -37,8 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.appclass.myapplication.navigation.AppScreens
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
 
 
 //@Composable
@@ -157,19 +161,57 @@ fun PlacesRecomendacionesScreen(
         } else {
             LazyColumn(modifier = Modifier.padding(16.dp)) {
                 items(places) { place ->
-                    PlaceCard(place)
+                    PlaceCard(place, navController)
+//                    PlaceCard(place) {
+//                        val placeJson = Uri.encode(Gson().toJson(place))
+//                        navController.navigate("placeDetail/$placeJson")
+//                    }
                 }
             }
         }
     }
 }
 
+//@Composable
+//fun PlaceCard(placeR: PlaceRecomendaciones, onClick: () -> Unit) { //vamos a hacer que cada tarjeta eu saquemos de la api (las recomendaciones), que sean clikables
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 8.dp)
+//            .clickable { onClick() },
+//        elevation = CardDefaults.cardElevation(4.dp)
+//    ) {
+//        Column(modifier = Modifier.padding(16.dp)) {
+//            Text(text = placeR.name, style = MaterialTheme.typography.titleMedium)
+//            placeR.address?.let {
+//                Text(text = it, style = MaterialTheme.typography.bodyMedium)
+//            }
+//            placeR.photoUrl?.let { url ->
+//                Spacer(modifier = Modifier.height(8.dp))
+//                Image(
+//                    painter = rememberAsyncImagePainter(url),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(180.dp),
+//                    contentScale = ContentScale.Crop
+//                )
+//            }
+//        }
+//    }
+//}
+
 @Composable
-fun PlaceCard(placeR: PlaceRecomendaciones) {
+fun PlaceCard(placeR: PlaceRecomendaciones, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable {
+                navController.navigate("placeDetail/${placeR.placeId}")
+                //navController.navigate(AppScreens.RecomendacionesDetalles.createRoute(placeR.placeId.toString()))
+
+            },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -188,9 +230,26 @@ fun PlaceCard(placeR: PlaceRecomendaciones) {
                     contentScale = ContentScale.Crop
                 )
             }
+//            placeR.placeDetail?.let { details ->
+//                Spacer(modifier = Modifier.height(8.dp))
+//                Text(text = "Detalles:", style = MaterialTheme.typography.labelMedium)
+//                details.description?.let {
+//                    Text(text = it, style = MaterialTheme.typography.bodySmall)
+//                }
+//                details.hours?.let {
+//                    Text(text = "Horario: $it", style = MaterialTheme.typography.bodySmall)
+//                }
+//                details.website?.let {
+//                    Text(text = "Sitio web: $it", style = MaterialTheme.typography.bodySmall)
+//                }
+//                details.phone?.let {
+//                    Text(text = "Teléfono: $it", style = MaterialTheme.typography.bodySmall)
+//                }
+//            }
         }
     }
 }
+
 
 // Función para obtener ubicación real
 fun getUserLocation(context: android.content.Context, onLocationReady: (Double, Double) -> Unit) {

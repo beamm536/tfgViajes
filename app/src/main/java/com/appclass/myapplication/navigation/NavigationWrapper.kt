@@ -25,12 +25,15 @@ import com.appclass.myapplication.ui.screens.mapbox.MapBoxScreen
 import com.appclass.myapplication.ui.screens.mapbox.detalleMapa.DetalleMapaScreen
 import com.appclass.myapplication.ui.screens.recomendacionesXgps.PlacesRecomendacionesScreen
 import com.appclass.myapplication.ui.screens.recomendacionesXgps.PlacesRecomendacionesViewModel
+import com.appclass.myapplication.ui.screens.recomendacionesXgps.places_details.RecomendacionesDetalles
+import com.appclass.myapplication.ui.screens.recomendacionesXgps.places_details.RecomendacionesDetallesViewModel
 import com.appclass.myapplication.ui.screens.registro.Registro
 import com.appclass.myapplication.ui.screens.registro.RegistroViewModel
 import com.appclass.myapplication.ui.screens.userProfile.Usuario
 import com.appclass.myapplication.ui.screens.userProfile.UsuarioViewModel
 import com.appclass.myapplication.ui.screens.userProfile.editProfile.EditarPerfil
 import com.appclass.myapplication.ui.screens.userProfile.editProfile.EditarPerfilViewModel
+import com.google.gson.Gson
 
 @Composable
 fun NavigationWrapper (navController: NavHostController) {
@@ -44,6 +47,8 @@ fun NavigationWrapper (navController: NavHostController) {
 
     val placeDetailsViewModel: PlaceDetailsViewModel = viewModel()
     val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
+
+    val recomendacionesDetallesViewModel : RecomendacionesDetallesViewModel = viewModel()
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
@@ -168,5 +173,29 @@ fun NavigationWrapper (navController: NavHostController) {
         composable (AppScreens.PlacesRecomendacionesScreen.ruta){
             PlacesRecomendacionesScreen(navController, viewModel())
         }
+
+
+//        composable(
+//            "placeDetail/{placeJson}",
+//            arguments = listOf(navArgument("placeJson") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val json = backStackEntry.arguments?.getString("placeJson")
+//            val place = Gson().fromJson(json, PlaceRecomendaciones::class.java)
+//            RecomendacionesDetalles(place)
+//        }
+//        composable("details/{placeId}") { backStackEntry ->
+//            val placeId = backStackEntry.arguments?.getString("placeId") ?: ""
+//            RecomendacionesDetalles(placeId = placeId, navController = navController)
+//        }
+
+        composable(
+            "placeDetail/{placeId}",
+            arguments = listOf(navArgument("placeId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val placeId = backStackEntry.arguments?.getString("placeId") ?: return@composable
+            RecomendacionesDetalles(placeId = placeId ?: "", navController = navController)
+        }
+
+
     }
 }

@@ -10,4 +10,10 @@ interface PlacesRecomendacionesApiService {
         @Query("lng") lng: Double,
         @Query("type") type: String = "tourist_attraction"
     ): PlaceResponse
+
+    //nuevo endpoint
+    @GET("place-details")
+    suspend fun getPlaceDetails(
+        @Query("place_id") placeId: String
+    ): DetallesResponse //esta data class se encuentra en: PlaceRecomendaciones
 }
