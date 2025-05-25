@@ -20,5 +20,8 @@ data class DetallesResponse(
     val website: String?,
     val openingHours: List<String>?,
     val reviews: List<Review>?,
-    val photoUrl: String?
+    val photoUrl: String?,
+    val summary: String?,
+    val suggestions: List<Suggestion>?,
+    val types: List<String>?
 )

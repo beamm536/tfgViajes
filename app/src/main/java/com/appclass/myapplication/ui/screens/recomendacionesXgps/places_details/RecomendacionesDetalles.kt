@@ -1,18 +1,24 @@
 package com.appclass.myapplication.ui.screens.recomendacionesXgps.places_details
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,42 +39,167 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRecomendaciones
 
+//@OptIn(ExperimentalMaterial3Api::class)
 //@Composable
-//fun RecomendacionesDetalles(place: PlaceRecomendaciones){ //param: places - class: PlaceRecomendaciones - package:api_repcomendacionXcoordenadas
+//fun RecomendacionesDetalles(
+//    placeId: String,
+//    navController: NavHostController,
+//    viewModel: RecomendacionesDetallesViewModel = viewModel()
+//) {
+//    val place = viewModel.placeDetails
+//    val loading = viewModel.loading
 //
-//    Column(modifier = Modifier
-//        .fillMaxSize()
-//        .padding(16.dp)) {
+//    LaunchedEffect(placeId) {
+//        println("🧭 [UI] Lanzando carga para: $placeId")
+//        viewModel.loadDetails(placeId)
+//    }
 //
-//        Text(text = place.name, style = MaterialTheme.typography.headlineSmall)
+//    Scaffold(topBar = {
+//        TopAppBar(
+//            title = { Text("Detalles del lugar") },
+//            navigationIcon = {
+//                IconButton(onClick = { navController.popBackStack() }) {
+//                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+//                }
+//            }
+//        )
+//    }) { padding ->
+//        if (loading) {
+//            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//                CircularProgressIndicator()
+//            }
+//        } else {
+//            place?.let {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .verticalScroll(rememberScrollState())
+//                        .padding(padding)
+//                        .background(MaterialTheme.colorScheme.surfaceVariant)
+//                ) {
+//                    // Imagen principal con bordes redondeados inferiores
+//                    it.photoUrl?.let { url ->
+//                        Image(
+//                            painter = rememberAsyncImagePainter(url),
+//                            contentDescription = null,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(250.dp)
+//                                .clip(
+//                                    RoundedCornerShape(24.dp)
+//                                ),
+//                            contentScale = ContentScale.Crop
+//                        )
+//                    }
 //
-//        Spacer(modifier = Modifier.height(8.dp))
+//                    Column(modifier = Modifier.padding(16.dp)) {
+//                        Text(it.name, style = MaterialTheme.typography.headlineSmall)
+//                        Spacer(Modifier.height(4.dp))
 //
-//        place.address?.let {
-//            Text(text = "Dirección: $it", style = MaterialTheme.typography.bodyMedium)
-//        }
+//                        it.address?.let { address ->
+//                            Text("📍 $address", style = MaterialTheme.typography.bodySmall)
+//                        }
 //
-//        place.rating?.let {
-//            Text(text = "Valoración: $it", style = MaterialTheme.typography.bodyMedium)
-//        }
+//                        Spacer(Modifier.height(8.dp))
 //
-//        place.reviews?.let {
-//            Text(text = "Reseñas: $it", style = MaterialTheme.typography.bodyMedium)
-//        }
+//                        Row(verticalAlignment = Alignment.CenterVertically) {
+//                            repeat(5) {
+//                                Icon(
+//                                    Icons.Default.Star,
+//                                    contentDescription = null,
+//                                    tint = MaterialTheme.colorScheme.primary
+//                                )
+//                            }
+//                            Spacer(modifier = Modifier.width(8.dp))
+////                            it.rating?.let { rating ->
+////                                Text("$rating", style = MaterialTheme.typography.bodySmall)
+////                            }
+//                            it.reviews?.let { reviews ->
+//                                Text("Reseñas:", style = MaterialTheme.typography.titleMedium)
+//                                reviews.forEach { review ->
+//                                    Text("⭐ ${review.rating} - ${review.authorName}")
+//                                    Text(review.text, style = MaterialTheme.typography.bodySmall)
+//                                    Spacer(Modifier.height(8.dp))
+//                                }
+//                            }
+//                        }
 //
-//        place.photoUrl?.let { url ->
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Image(
-//                painter = rememberAsyncImagePainter(url),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(200.dp),
-//                contentScale = ContentScale.Crop
-//            )
+//                        Spacer(Modifier.height(16.dp))
+//
+//                        Text("Descripción", style = MaterialTheme.typography.titleMedium)
+//                        Text(
+//                            text = it.summary ?: "Sin descripción disponible.",
+//                            style = MaterialTheme.typography.bodyMedium
+//                        )
+//
+//                        Spacer(Modifier.height(24.dp))
+//
+//                        it.openingHours?.let { hours ->
+//                            Text("🕒 Horarios", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(Modifier.height(4.dp))
+//                            hours.forEach { hour ->
+//                                Text(text = "- $hour", style = MaterialTheme.typography.bodySmall)
+//                            }
+//                            Spacer(Modifier.height(16.dp))
+//                        }
+//
+//                        Spacer(Modifier.height(24.dp))
+//
+//                        it.reviews?.let { reviews ->
+//                            Text("🗣 Opiniones", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(Modifier.height(4.dp))
+//                            reviews.forEach { review ->
+//                                Text("⭐ ${review.rating} - ${review.authorName}", style = MaterialTheme.typography.bodySmall)
+//                                Text(review.text, style = MaterialTheme.typography.bodySmall)
+//                                Spacer(Modifier.height(8.dp))
+//                            }
+//                        }
+//
+//                        Spacer(Modifier.height(24.dp))
+//
+//                        Text("Sugerencias", style = MaterialTheme.typography.titleMedium)
+//
+//                        it.suggestions?.let { suggestions ->
+//                            Text("✨ Sugerencias", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(Modifier.height(8.dp))
+//                            suggestions.forEach { suggestion ->
+//                                SuggestionItem(
+//                                    imageUrl = suggestion.imageUrl,
+//                                    text = suggestion.text
+//                                )
+//                            }
+//                        }
+////                        SuggestionItem(
+////                            imageUrl = "https://source.unsplash.com/random/100x100?volcano",
+////                            text = "Disfruta de vistas volcánicas únicas y paisajes lunares."
+////                        )
+////                        SuggestionItem(
+////                            imageUrl = "https://source.unsplash.com/random/100x100?lava",
+////                            text = "Recorre senderos naturales rodeados de formaciones geológicas."
+////                        )
+//                    }
+//                }
+//            } ?: Text("⚠️ No se encontraron detalles.", modifier = Modifier.padding(16.dp))
 //        }
 //    }
 //}
+//
+//@Composable
+//fun SuggestionItem(imageUrl: String, text: String) {
+//    Row(modifier = Modifier.padding(vertical = 8.dp)) {
+//        Image(
+//            painter = rememberAsyncImagePainter(imageUrl),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .size(60.dp)
+//                .clip(RoundedCornerShape(12.dp)),
+//            contentScale = ContentScale.Crop
+//        )
+//        Spacer(modifier = Modifier.width(12.dp))
+//        Text(text, style = MaterialTheme.typography.bodySmall)
+//    }
+//}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,65 +221,120 @@ fun RecomendacionesDetalles(
             title = { Text("Detalles del lugar") },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                 }
             }
         )
     }) { padding ->
         if (loading) {
-            println("⏳ [UI] Mostrando loading")
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else {
             place?.let {
-                println("🟢 [UI] Mostrando detalles para: ${it.name}")
                 Column(
-                    Modifier
-                        .padding(paddingValues = padding)
-                        .then(Modifier.padding(16.dp))
+                    modifier = Modifier
+                        .fillMaxSize()
                         .verticalScroll(rememberScrollState())
+                        .padding(padding)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                 ) {
+                    // Imagen principal
                     it.photoUrl?.let { url ->
                         Image(
                             painter = rememberAsyncImagePainter(url),
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(200.dp),
+                                .height(250.dp)
+                                .clip(RoundedCornerShape(24.dp)),
                             contentScale = ContentScale.Crop
                         )
+                    }
+
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(it.name, style = MaterialTheme.typography.headlineSmall)
+                        Spacer(Modifier.height(4.dp))
+
+                        it.address?.let { address ->
+                            Text("📍 $address", style = MaterialTheme.typography.bodySmall)
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            repeat(5) {
+                                Icon(
+                                    Icons.Default.Star,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+//                            it.rating?.let { rating ->
+//                                Text("$rating", style = MaterialTheme.typography.bodySmall)
+//                            }
+                        }
+
                         Spacer(Modifier.height(16.dp))
-                    }
 
-                    Text(text = it.name, style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.height(8.dp))
-                    it.address?.let { Text(it) }
-                    it.phone?.let { Text("Tel: $it") }
-                    it.website?.let { Text("Web: $it") }
+                        Text("Descripción", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = it.summary ?: "Sin descripción disponible.",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
 
-                    Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(24.dp))
 
-                    it.openingHours?.let {
-                        Text("Horario:")
-                        it.forEach { hour -> Text("- $hour") }
-                    }
+                        it.openingHours?.let { hours ->
+                            Text("🕒 Horarios", style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(4.dp))
+                            hours.forEach { hour ->
+                                Text(text = "- $hour", style = MaterialTheme.typography.bodySmall)
+                            }
+                            Spacer(Modifier.height(16.dp))
+                        }
 
-                    Spacer(Modifier.height(16.dp))
+                        it.reviews?.let { reviews ->
+                            Text("🗣 Opiniones", style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(4.dp))
+                            reviews.forEach { review ->
+                                Text("⭐ ${review.rating} - ${review.authorName}", style = MaterialTheme.typography.bodySmall)
+                                Text(review.text, style = MaterialTheme.typography.bodySmall)
+                                Spacer(Modifier.height(8.dp))
+                            }
+                        }
 
-                    it.reviews?.let { reviews ->
-                        Text("Reseñas:", style = MaterialTheme.typography.titleMedium)
-                        reviews.forEach { review ->
-                            Text("⭐ ${review.rating} - ${review.authorName}")
-                            Text(review.text, style = MaterialTheme.typography.bodySmall)
+                        it.suggestions?.let { suggestions ->
+                            Spacer(Modifier.height(24.dp))
+                            Text("✨ Sugerencias", style = MaterialTheme.typography.titleMedium)
                             Spacer(Modifier.height(8.dp))
+                            suggestions.forEach { suggestion ->
+                                SuggestionItem(
+                                    imageUrl = suggestion.imageUrl,
+                                    text = suggestion.text
+                                )
+                            }
                         }
                     }
                 }
-            } ?: run {
-                println("⚠️ [UI] place es null, no se encontraron detalles.")
-                Text("No se encontraron detalles.")
-            }
+            } ?: Text("⚠️ No se encontraron detalles.", modifier = Modifier.padding(16.dp))
         }
+    }
+}
+
+@Composable
+fun SuggestionItem(imageUrl: String, text: String) {
+    Row(modifier = Modifier.padding(vertical = 8.dp)) {
+        Image(
+            painter = rememberAsyncImagePainter(imageUrl),
+            contentDescription = null,
+            modifier = Modifier
+                .size(60.dp)
+                .clip(RoundedCornerShape(12.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(text, style = MaterialTheme.typography.bodySmall)
     }
 }
