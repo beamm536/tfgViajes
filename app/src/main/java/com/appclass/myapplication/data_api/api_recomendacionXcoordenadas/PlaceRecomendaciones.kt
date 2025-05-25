@@ -11,3 +11,14 @@ data class PlaceRecomendaciones(
     val categories: List<String>,
     val photoUrl: String?
 )
+
+
+data class DetallesResponse(
+    val name: String,
+    val address: String?,
+    val phone: String?,
+    val website: String?,
+    val openingHours: List<String>?,
+    val reviews: List<Review>?,
+    val photoUrl: String?
+)

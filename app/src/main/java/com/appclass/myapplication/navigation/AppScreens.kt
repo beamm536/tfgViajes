@@ -11,7 +11,7 @@ sealed class AppScreens(val ruta: String) {
     object EditarPerfil: AppScreens("EditarPerfil")
     object MapOnly: AppScreens("MapOnlyScreen")
 
-    object PlaceDetailsGoogle: AppScreens("placeDetails/{placeId}")
+    object PlaceDetailsGoogle: AppScreens("placeDetail/{placeId}") //aqui antes tenia una s en placeDetails
     object Places: AppScreens("Places")
 
     object DetalleMapa : AppScreens("detalleMapa/{nombre}/{lat}/{lon}") {
@@ -22,5 +22,9 @@ sealed class AppScreens(val ruta: String) {
 
     object PruebaExplorarLugares : AppScreens("PruebaExplorarLugares")
     object PlacesRecomendacionesScreen : AppScreens("PlacesRecomendacionesScreen")
+
+    object RecomendacionesDetalles : AppScreens("placeDetail/{placeId}"){
+        fun createRoute(placeId: String): String = "placeDetail/$placeId"
+    }
 
 }
