@@ -127,7 +127,7 @@ fun PlacesRecomendacionesScreen(
         if (!requestedLocation) {
             if (permissionGranted) {
                 getUserLocation(context) { lat, lng ->
-                    viewModel.loadPlaces(lat, lng)
+                    viewModel.loadPlaces(lat, lng)  //LOCALIZACION REAL DEL DISPOSITIVO
                     //viewModel.loadPlaces(40.535112, -3.616192)  // Madrid 40.552624, -3.457556
                 }
             } else {
