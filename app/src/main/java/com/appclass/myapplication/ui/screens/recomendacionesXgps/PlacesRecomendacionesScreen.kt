@@ -127,8 +127,8 @@ fun PlacesRecomendacionesScreen(
         if (!requestedLocation) {
             if (permissionGranted) {
                 getUserLocation(context) { lat, lng ->
-                    //viewModel.loadPlaces(lat, lng)
-                    viewModel.loadPlaces(40.4168, -3.7038)  // Madrid
+                    viewModel.loadPlaces(lat, lng)
+                    //viewModel.loadPlaces(40.535112, -3.616192)  // Madrid 40.552624, -3.457556
                 }
             } else {
                 permissionLauncher.launch(locationPermission)
