@@ -9,3 +9,8 @@ data class Review(
     val rating: Double,
     val text: String
 )
+
+data class Suggestion(
+    val text: String,
+    val imageUrl: String
+)
