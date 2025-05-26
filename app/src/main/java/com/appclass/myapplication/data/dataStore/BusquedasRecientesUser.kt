@@ -18,9 +18,10 @@ class BusquedasRecientesUser (private val context: Context){
     }
 
     // Leer el string (lista serializada)
-    val busquedasRecientes: Flow<List<String>> = context.dataStore.data.map { preferences ->
-        preferences[BUSQUEDAS_KEY]?.split("||")?.filter { it.isNotBlank() } ?: emptyList()
-    }
+    val busquedasRecientes: Flow<List<String>> = context.userPrefsDataStore.data
+        .map { preferences ->
+            preferences[BUSQUEDAS_KEY]?.split("||")?.filter { it.isNotBlank() } ?: emptyList()
+        }
 
     // Guardar una nueva búsqueda
     suspend fun guardarBusqueda(nueva: String) {
