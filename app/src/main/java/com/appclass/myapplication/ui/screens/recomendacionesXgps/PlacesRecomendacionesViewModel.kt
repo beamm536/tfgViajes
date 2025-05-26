@@ -72,10 +72,13 @@ class PlacesRecomendacionesViewModel(
 //}
 
     fun favoritos(placeId: String) {
+        val isFavNow = _places.value.firstOrNull { it.placeId == placeId }?.isFavourite ?: false
+
         // ⚡ Cambiar visiblemente el favorito ya
         _places.value = _places.value.map { place ->
             if (place.placeId == placeId) {
-                place.copy(isFavourite = !place.isFavourite)
+               // place.copy(isFavourite = !place.isFavourite)
+                place.copy(isFavourite = !isFavNow)
             } else place
         }
 
