@@ -9,7 +9,9 @@ data class PlaceRecomendaciones(
     val latitude: Double,
     val longitude: Double,
     val categories: List<String>,
-    val photoUrl: String?
+    val photoUrl: String?,
+    //seccion de favoritos en las recomendaciones
+    val isFavourite: Boolean = false //empeice sin el favorito añadido              >>> deberia estar en var ?
 )
 
 

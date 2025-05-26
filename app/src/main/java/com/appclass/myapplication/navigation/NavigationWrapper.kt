@@ -46,7 +46,7 @@ fun NavigationWrapper (navController: NavHostController) {
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
 
     val placeDetailsViewModel: PlaceDetailsViewModel = viewModel()
-    val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
+   // val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
 
     val recomendacionesDetallesViewModel : RecomendacionesDetallesViewModel = viewModel()
 
@@ -171,7 +171,7 @@ fun NavigationWrapper (navController: NavHostController) {
         }
 
         composable (AppScreens.PlacesRecomendacionesScreen.ruta){
-            PlacesRecomendacionesScreen(navController, viewModel())
+            PlacesRecomendacionesScreen(navController)
         }
 
 
