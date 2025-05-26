@@ -32,4 +32,15 @@ class PlacesRecomendacionesViewModel : ViewModel(){
             }
         }
     }
+
+    //para la seccion de favoritos - toggle de favoritos (switch) +/-
+    fun favoritos(placeId: String){
+        _places.value = _places.value.map { place ->
+            if (place.placeId == placeId) {
+                place.copy(isFavourite = !place.isFavourite)
+            }else{
+                place
+            }
+        }
+    }
 }
