@@ -27,4 +27,10 @@ sealed class AppScreens(val ruta: String) {
         fun createRoute(placeId: String): String = "placeDetail/$placeId"
     }
 
+
+    //PANTALLAS PARA LA CREACION DE LAS RECOMENDACIONES
+    object CrearRecomendacion1 : AppScreens("crearRecomendacion1")
+    object CrearRecomendacion2 : AppScreens("crearRecomendacion2")
+    object CrearRecomendacion3 : AppScreens("crearRecomendacion3")
+    object CrearRecomendacion4 : AppScreens("crearRecomendacion4")
 }

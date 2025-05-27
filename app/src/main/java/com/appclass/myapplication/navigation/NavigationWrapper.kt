@@ -11,6 +11,11 @@ import androidx.navigation.navArgument
 import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRecomendaciones
 import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
 import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.RecomendacionViewModel
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion1
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion2
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion3
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion4
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
@@ -51,10 +56,11 @@ fun NavigationWrapper (navController: NavHostController) {
    // val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
 
     val recomendacionesDetallesViewModel : RecomendacionesDetallesViewModel = viewModel()
+    val recomendacionViewModel : RecomendacionViewModel = viewModel()
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.PlacesRecomendacionesScreen.ruta){
+    NavHost(navController = navController, startDestination = AppScreens.CrearRecomendacion1.ruta){ //PlacesRecomendacionesScreen
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -197,6 +203,56 @@ fun NavigationWrapper (navController: NavHostController) {
             val placeId = backStackEntry.arguments?.getString("placeId") ?: return@composable
             RecomendacionesDetalles(placeId = placeId ?: "", navController = navController)
         }
+
+        //VISTAS PARA LA CREACION DE LAS RECOMENDACIONES
+        composable (AppScreens.CrearRecomendacion1.ruta){
+            CrearRecomendacion1 (
+                viewModel = recomendacionViewModel,
+                onNext = {
+                    navController.navigate(AppScreens.CrearRecomendacion2.ruta)
+                    Log.d("NAVEGACION", "titulooo guardado, vamos con el siguiente paso")
+                }
+            )
+        }
+        composable (AppScreens.CrearRecomendacion2.ruta){
+            CrearRecomendacion2 (
+                viewModel = recomendacionViewModel,
+                onNext = {
+                    navController.navigate(AppScreens.CrearRecomendacion3.ruta)
+                    Log.d("NAVEGACION", "titulooo guardado, vamos con el siguiente paso")
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable (AppScreens.CrearRecomendacion3.ruta){
+            CrearRecomendacion3 (
+                viewModel = recomendacionViewModel,
+                onNext = {
+                    navController.navigate(AppScreens.CrearRecomendacion4.ruta)
+                    Log.d("NAVEGACION", "titulooo guardado, vamos con el siguiente paso")
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable (AppScreens.CrearRecomendacion4.ruta){
+            CrearRecomendacion4 (
+                viewModel = recomendacionViewModel,
+                onDone = {
+                    // Puedes navegar al perfil o a un mensaje de éxito
+                    navController.navigate(AppScreens.PlacesRecomendacionesScreen.ruta) {
+                        popUpTo(AppScreens.CrearRecomendacion4.ruta) { inclusive = true }
+                    }
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
 
 
     }
