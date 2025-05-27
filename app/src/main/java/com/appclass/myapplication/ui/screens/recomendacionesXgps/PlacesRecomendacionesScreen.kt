@@ -30,8 +30,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -44,7 +46,11 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import com.appclass.myapplication.R
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -54,6 +60,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.appclass.myapplication.data.dataStore.DataStoreManager
 import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.ui.screens.permisos.getUserLocation
+import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.utils.obtenerSaludo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -183,10 +190,33 @@ fun PlacesRecomendacionesScreen(
         }
 
         if (places.isEmpty() && !loading) {
-            Text(
-                text = "No se encontraron lugares.",
-                modifier = Modifier.padding(16.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.no_result),
+                        contentDescription = "file search",
+                        modifier = Modifier
+                            .size(180.dp)
+                            .padding(bottom = 16.dp)
+                    )
+                    Text(
+                        text = "No se encontraron lugares",
+                        fontSize = 20.sp,
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
+                }
+            }
         } else {
             Column(
                 modifier = Modifier
@@ -424,6 +454,11 @@ fun PlaceCardGrid(
             }
         }
     }
+}
+
+@Composable
+fun NoResult(){
+    //AQUI HACER LO QUE TE HE DICHO SERIA BUENA IDEA?
 }
 
 
