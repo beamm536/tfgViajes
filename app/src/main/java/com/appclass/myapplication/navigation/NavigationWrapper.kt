@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRecomendaciones
 import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
+import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
@@ -44,6 +45,7 @@ fun NavigationWrapper (navController: NavHostController) {
     val registroViewModel: RegistroViewModel = viewModel()
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val editarPerfilViewModel: EditarPerfilViewModel = viewModel()
+    val navigationViewModel: NavigationViewModel = viewModel()
 
     val placeDetailsViewModel: PlaceDetailsViewModel = viewModel()
    // val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
@@ -171,7 +173,7 @@ fun NavigationWrapper (navController: NavHostController) {
         }
 
         composable (AppScreens.PlacesRecomendacionesScreen.ruta){
-            PlacesRecomendacionesScreen(navController)
+            PlacesRecomendacionesScreen(navController, navigationViewModel)
         }
 
 
