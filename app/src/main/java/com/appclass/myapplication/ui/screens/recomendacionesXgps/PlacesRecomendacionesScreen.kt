@@ -45,6 +45,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +60,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.appclass.myapplication.data.dataStore.DataStoreManager
 import com.appclass.myapplication.navigation.AppScreens
+import com.appclass.myapplication.ui.components.barraNavegacion.BottomNavBar
+import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
 import com.appclass.myapplication.ui.screens.permisos.getUserLocation
 import com.appclass.myapplication.ui.theme.Poppins
 import com.appclass.myapplication.ui.utils.obtenerSaludo
@@ -66,64 +69,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 
-
-//@Composable
-//fun PlacesRecomendacionesScreen (navController: NavHostController, viewModel: PlacesRecomendacionesViewModel = viewModel ()){
-//    val places by viewModel.places.collectAsState()
-//    val loading by viewModel.loading.collectAsState()
-//
-//    // Carga inicial de lugares (puedes moverlo luego a eventos)
-//    LaunchedEffect(Unit) {
-//        viewModel.loadPlaces(40.4168, -3.7038) // Coordenadas de prueba
-//    }
-//
-//    Column(modifier = Modifier.fillMaxSize()) {
-//        if (loading) {
-//            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-//        }
-//
-//        LazyColumn(modifier = Modifier.padding(16.dp)) {
-//            items(places) { place ->
-//                PlaceCard(place)
-//            }
-//        }
-//    }
-//}
-//
-//
-//@Composable
-//fun PlaceCard(placeR: PlaceRecomendaciones) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp),
-//        elevation = CardDefaults.cardElevation(4.dp)
-//    ) {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = placeR.name, style = MaterialTheme.typography.titleMedium)
-//            placeR.address?.let {
-//                Text(text = it, style = MaterialTheme.typography.bodyMedium)
-//            }
-//            placeR.photoUrl?.let { url ->
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Image(
-//                    painter = rememberAsyncImagePainter(url),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-//        }
-//    }
-//}
-
-
 //---------------
 @Composable
 fun PlacesRecomendacionesScreen(
     navController: NavHostController,
+    navigationViewModel: NavigationViewModel
     //viewModel: PlacesRecomendacionesViewModel = viewModel()
 ) {
     //val context = LocalContext.current
@@ -183,211 +133,97 @@ fun PlacesRecomendacionesScreen(
     LaunchedEffect(places) {
         Log.d("UI_STATE", "Lugares en UI: ${places.size}")
     }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (loading) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    Scaffold(
+        containerColor = Color(0xFFF0FAF6),
+        bottomBar = {
+            BottomNavBar(navController = navController, viewModel = navigationViewModel)
         }
-
-        if (places.isEmpty() && !loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.no_result),
-                        contentDescription = "file search",
-                        modifier = Modifier
-                            .size(180.dp)
-                            .padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = "No se encontraron lugares",
-                        fontSize = 20.sp,
-                        fontFamily = Poppins,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
-                }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            if (loading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text(
-                    text = " $saludo",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Text(
-                    text = "🌍 Explora el mundo a tu alrededor",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = "Estas son nuestras recomendaciones cerca de ti",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
 
-                Spacer(Modifier.height(16.dp))
-
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+            if (places.isEmpty() && !loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(places, key = { it.placeId ?: it.name }) { place ->
-                        PlaceCardGrid(
-                            place = place,
-                            navController = navController,
-                            onFavoriteClick = {
-                                place.placeId?.let {
-                                    viewModel.favoritos(it/*place.placeId ?: ""*/)
-                                }
-                            }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.no_result),
+                            contentDescription = "file search",
+                            modifier = Modifier
+                                .size(180.dp)
+                                .padding(bottom = 16.dp)
+                        )
+                        Text(
+                            text = "No se encontraron lugares",
+                            fontSize = 20.sp,
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(16.dp)
                         )
                     }
                 }
-            }
-        }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = " $saludo",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        text = "🌍 Explora el mundo a tu alrededor",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "Estas son nuestras recomendaciones cerca de ti",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
+                    Spacer(Modifier.height(16.dp))
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(places, key = { it.placeId ?: it.name }) { place ->
+                            PlaceCardGrid(
+                                place = place,
+                                navController = navController,
+                                onFavoriteClick = {
+                                    place.placeId?.let {
+                                        viewModel.favoritos(it/*place.placeId ?: ""*/)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
-
-//@Composable
-//fun PlaceCard(placeR: PlaceRecomendaciones, onClick: () -> Unit) { //vamos a hacer que cada tarjeta eu saquemos de la api (las recomendaciones), que sean clikables
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp)
-//            .clickable { onClick() },
-//        elevation = CardDefaults.cardElevation(4.dp)
-//    ) {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = placeR.name, style = MaterialTheme.typography.titleMedium)
-//            placeR.address?.let {
-//                Text(text = it, style = MaterialTheme.typography.bodyMedium)
-//            }
-//            placeR.photoUrl?.let { url ->
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Image(
-//                    painter = rememberAsyncImagePainter(url),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-//        }
-//    }
-//}
-
-//@Composable
-//fun PlaceCard(placeR: PlaceRecomendaciones, navController: NavHostController) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp)
-//            .clickable {
-//                navController.navigate("placeDetail/${placeR.placeId}")
-//                //navController.navigate(AppScreens.RecomendacionesDetalles.createRoute(placeR.placeId.toString()))
-//
-//            },
-//        elevation = CardDefaults.cardElevation(4.dp)
-//    ) {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(text = placeR.name, style = MaterialTheme.typography.titleMedium)
-//            placeR.address?.let {
-//                Text(text = it, style = MaterialTheme.typography.bodyMedium)
-//            }
-//            placeR.photoUrl?.let { url ->
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Image(
-//                    painter = rememberAsyncImagePainter(url),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-////            placeR.placeDetail?.let { details ->
-////                Spacer(modifier = Modifier.height(8.dp))
-////                Text(text = "Detalles:", style = MaterialTheme.typography.labelMedium)
-////                details.description?.let {
-////                    Text(text = it, style = MaterialTheme.typography.bodySmall)
-////                }
-////                details.hours?.let {
-////                    Text(text = "Horario: $it", style = MaterialTheme.typography.bodySmall)
-////                }
-////                details.website?.let {
-////                    Text(text = "Sitio web: $it", style = MaterialTheme.typography.bodySmall)
-////                }
-////                details.phone?.let {
-////                    Text(text = "Teléfono: $it", style = MaterialTheme.typography.bodySmall)
-////                }
-////            }
-//        }
-//    }
-//}
-
-//@Composable
-//fun PlaceCard(place: PlaceRecomendaciones, navController: NavHostController) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 12.dp)
-//            .clickable {
-//                navController.navigate("placeDetail/${place.placeId}")
-//            },
-//        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-//        shape = RoundedCornerShape(20.dp)
-//    ) {
-//        Column(modifier = Modifier.fillMaxWidth()) {
-//
-//            // Imagen destacada
-//            place.photoUrl?.let { url ->
-//                Image(
-//                    painter = rememberAsyncImagePainter(url),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(200.dp)
-//                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-//
-//            Column(modifier = Modifier.padding(16.dp)) {
-//                Text(
-//                    text = place.name,
-//                    style = MaterialTheme.typography.titleLarge,
-//                )
-//                Spacer(modifier = Modifier.height(4.dp))
-//
-//                place.address?.let {
-//                    Text(
-//                        text = it,
-//                        style = MaterialTheme.typography.bodySmall,
-//                        color = MaterialTheme.colorScheme.onSurfaceVariant
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
 
 
 @Composable
@@ -454,11 +290,6 @@ fun PlaceCardGrid(
             }
         }
     }
-}
-
-@Composable
-fun NoResult(){
-    //AQUI HACER LO QUE TE HE DICHO SERIA BUENA IDEA?
 }
 
 
