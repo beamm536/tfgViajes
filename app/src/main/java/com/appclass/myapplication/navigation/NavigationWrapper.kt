@@ -57,6 +57,7 @@ fun NavigationWrapper (navController: NavHostController) {
    // val placesRecomendacionesViewModel: PlacesRecomendacionesViewModel = viewModel()
 
     val recomendacionesDetallesViewModel : RecomendacionesDetallesViewModel = viewModel()
+    val recomendacionViewModel : RecomendacionViewModel = viewModel()
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
@@ -261,6 +262,8 @@ fun NavigationWrapper (navController: NavHostController) {
                 }
             )
         }
+
+
 
     }
 }
