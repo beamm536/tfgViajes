@@ -33,4 +33,7 @@ sealed class AppScreens(val ruta: String) {
     object CrearRecomendacion2 : AppScreens("crearRecomendacion2")
     object CrearRecomendacion3 : AppScreens("crearRecomendacion3")
     object CrearRecomendacion4 : AppScreens("crearRecomendacion4")
+
+    //PANTALLA PARA EL LISTADO DE MIS RECOMENDACIONES
+    object ListarRecomendaciones : AppScreens("listarRecomendaciones")
 }

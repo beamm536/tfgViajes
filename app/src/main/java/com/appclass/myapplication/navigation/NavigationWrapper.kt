@@ -16,6 +16,7 @@ import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRe
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion2
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion3
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion4
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.listar.ListarRecomendaciones
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.AuthViewModel
@@ -60,7 +61,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.CrearRecomendacion1.ruta){ //PlacesRecomendacionesScreen
+    NavHost(navController = navController, startDestination = AppScreens.PlacesRecomendacionesScreen.ruta){ //PlacesRecomendacionesScreen
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -240,13 +241,22 @@ fun NavigationWrapper (navController: NavHostController) {
         }
         composable (AppScreens.CrearRecomendacion4.ruta){
             CrearRecomendacion4 (
+                navController,
                 viewModel = recomendacionViewModel,
                 onDone = {
                     // Puedes navegar al perfil o a un mensaje de éxito
-                    navController.navigate(AppScreens.PlacesRecomendacionesScreen.ruta) {
-                        popUpTo(AppScreens.CrearRecomendacion4.ruta) { inclusive = true }
+                    navController.navigate(AppScreens.ListarRecomendaciones.ruta) {
+                        popUpTo(AppScreens.CrearRecomendacion1.ruta) { inclusive = true }
                     }
                 },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(AppScreens.ListarRecomendaciones.ruta) {
+            ListarRecomendaciones(
+                viewModel = recomendacionViewModel,
                 onBack = {
                     navController.popBackStack()
                 }

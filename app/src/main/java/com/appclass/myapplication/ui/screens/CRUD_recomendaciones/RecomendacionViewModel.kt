@@ -74,6 +74,9 @@ class RecomendacionViewModel: ViewModel() {
         _isPublic.value = public
     }
 
+    private val _userRecommendations = mutableStateListOf<UserRecomendation>()
+    val userRecommendations: List<UserRecomendation> = _userRecommendations
+
 
 //    fun createRecommendation(onSuccess: () -> Unit, onError: (Exception) -> Unit) {
 //        //val userId = auth.currentUser?.uid ?: return CON ESTA LINEA HACEMOS QE SEA NECESARIO INCIAR SESION EN LA APP
@@ -222,6 +225,22 @@ class RecomendacionViewModel: ViewModel() {
             }
     }
 
+    fun listarRecomendacion (onError: (Exception) -> Unit){
+        val userId = auth.currentUser?.uid ?: "debug-user"
 
+        db.collection("user_recomendaciones")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                _userRecommendations.clear()
+                for (document in result) {
+                    val rec = document.toObject(UserRecomendation::class.java)
+                    _userRecommendations.add(rec)
+                }
+            }
+            .addOnFailureListener { e ->
+                onError(e)
+            }
+    }
 
 }

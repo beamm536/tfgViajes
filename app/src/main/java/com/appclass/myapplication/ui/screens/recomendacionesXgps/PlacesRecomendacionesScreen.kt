@@ -144,86 +144,168 @@ fun PlacesRecomendacionesScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (loading) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            }
-
-            if (places.isEmpty() && !loading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.no_result),
-                            contentDescription = "file search",
-                            modifier = Modifier
-                                .size(180.dp)
-                                .padding(bottom = 16.dp)
-                        )
-                        Text(
-                            text = "No se encontraron lugares",
-                            fontSize = 20.sp,
-                            fontFamily = Poppins,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(16.dp)
-                        )
-                    }
+//            if (loading) {
+//                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+//            }
+//
+//            if (places.isEmpty() && !loading) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(24.dp),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Column(
+//                        verticalArrangement = Arrangement.Center,
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                    ) {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.no_result),
+//                            contentDescription = "file search",
+//                            modifier = Modifier
+//                                .size(180.dp)
+//                                .padding(bottom = 16.dp)
+//                        )
+//                        Text(
+//                            text = "No se encontraron lugares",
+//                            fontSize = 20.sp,
+//                            fontFamily = Poppins,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier
+//                                .padding(16.dp)
+//                        )
+//                    }
+//                }
+//            } else {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(horizontal = 16.dp)
+//                ) {
+//                    Text(
+//                        text = " $saludo",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        modifier = Modifier.padding(top = 16.dp)
+//                    )
+//                    Text(
+//                        text = "🌍 Explora el mundo a tu alrededor",
+//                        style = MaterialTheme.typography.titleMedium
+//                    )
+//                    Text(
+//                        text = "Estas son nuestras recomendaciones cerca de ti",
+//                        style = MaterialTheme.typography.bodyMedium,
+//                        color = MaterialTheme.colorScheme.onSurfaceVariant
+//                    )
+//
+//                    Spacer(Modifier.height(16.dp))
+//
+//                    LazyVerticalGrid(
+//                        columns = GridCells.Fixed(2),
+//                        modifier = Modifier.fillMaxSize(),
+//                        contentPadding = PaddingValues(bottom = 16.dp),
+//                        verticalArrangement = Arrangement.spacedBy(12.dp),
+//                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+//                    ) {
+//                        items(places, key = { it.placeId ?: it.name }) { place ->
+//                            PlaceCardGrid(
+//                                place = place,
+//                                navController = navController,
+//                                onFavoriteClick = {
+//                                    place.placeId?.let {
+//                                        viewModel.favoritos(it/*place.placeId ?: ""*/)
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
+            when {
+                loading -> {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = " $saludo",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                    Text(
-                        text = "🌍 Explora el mundo a tu alrededor",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = "Estas son nuestras recomendaciones cerca de ti",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
 
-                    Spacer(Modifier.height(16.dp))
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                places.isEmpty() -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        items(places, key = { it.placeId ?: it.name }) { place ->
-                            PlaceCardGrid(
-                                place = place,
-                                navController = navController,
-                                onFavoriteClick = {
-                                    place.placeId?.let {
-                                        viewModel.favoritos(it/*place.placeId ?: ""*/)
-                                    }
-                                }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.no_result),
+                                contentDescription = "file search",
+                                modifier = Modifier
+                                    .size(180.dp)
+                                    .padding(bottom = 16.dp)
+                            )
+                            Text(
+                                text = "No se encontraron lugares",
+                                fontSize = 20.sp,
+                                fontFamily = Poppins,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(16.dp)
                             )
                         }
                     }
                 }
-            }
 
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = " $saludo",
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                        Text(
+                            text = "🌍 Explora el mundo a tu alrededor",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = "Estas son nuestras recomendaciones cerca de ti",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(places, key = { it.placeId ?: it.name }) { place ->
+                                PlaceCardGrid(
+                                    place = place,
+                                    navController = navController,
+                                    onFavoriteClick = {
+                                        place.placeId?.let {
+                                            viewModel.favoritos(it)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     }
 }
+
+
 
 
 @Composable

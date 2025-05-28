@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.test.services.storage.file.PropertyFile.Column
 import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.RecomendacionViewModel
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun CrearRecomendacion4 (
+    navController: NavController,
     viewModel: RecomendacionViewModel = viewModel(),
     onDone: () -> Unit,
     onBack: () -> Unit
@@ -84,11 +86,11 @@ fun CrearRecomendacion4 (
                     isSaving = true
                     errorMessage = null
 
-                    if(FirebaseAuth.getInstance().currentUser == null){
-                        errorMessage = "DEBES INICIAR SESION PARA GUARDAR UNA RECOMENDACION"
-                        isSaving = false
-                        return@Button
-                    }
+//                    if(FirebaseAuth.getInstance().currentUser == null){
+//                        errorMessage = "DEBES INICIAR SESION PARA GUARDAR UNA RECOMENDACION"
+//                        isSaving = false
+//                        return@Button
+//                    }
 
                     viewModel.createRecommendation(
                         onSuccess = {
