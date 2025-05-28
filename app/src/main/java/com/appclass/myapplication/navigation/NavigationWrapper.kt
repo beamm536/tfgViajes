@@ -61,7 +61,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.PlacesRecomendacionesScreen.ruta){ //PlacesRecomendacionesScreen
+    NavHost(navController = navController, startDestination = AppScreens.CrearRecomendacion1.ruta){ //PlacesRecomendacionesScreen
 
         composable(AppScreens.Auth.ruta){
             Auth(

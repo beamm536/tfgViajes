@@ -243,4 +243,23 @@ class RecomendacionViewModel: ViewModel() {
             }
     }
 
+    fun eliminarRecomendacion(
+        id: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val userId = auth.currentUser?.uid ?: "debug-user"
+        //val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            onError(Exception("No estás logueado"))
+            return
+        }
+
+        db.collection("user_recomendaciones")
+            .document(id)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
 }
