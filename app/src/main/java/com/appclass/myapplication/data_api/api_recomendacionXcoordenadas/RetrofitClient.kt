@@ -16,6 +16,7 @@ object RetrofitClient {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("http://192.168.0.35:8000/")  // <-- Importante para emulador Android  10.0.2.2 (esto si el backend estuviera en el mismo ordenador)
+        //.baseUrl("http://192.168.0.173:8000/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
