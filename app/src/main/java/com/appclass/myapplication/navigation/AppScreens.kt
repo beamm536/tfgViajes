@@ -36,4 +36,9 @@ sealed class AppScreens(val ruta: String) {
 
     //PANTALLA PARA EL LISTADO DE MIS RECOMENDACIONES
     object ListarRecomendaciones : AppScreens("listarRecomendaciones")
+
+    //EDITAR RECOMENDACIONES
+    object EditarRecomendaciones : AppScreens("editarRecomendacion/{recJson}"){
+        fun createRoute(recJson: String) = "editarRecomendacion/$recJson"
+    }
 }

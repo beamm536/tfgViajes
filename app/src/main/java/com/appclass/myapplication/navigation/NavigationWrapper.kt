@@ -8,7 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.appclass.myapplication.data.recomendaciones.UserRecomendation
 import com.appclass.myapplication.data_api.api_recomendacionXcoordenadas.PlaceRecomendaciones
+import com.appclass.myapplication.navigation.AppScreens.EditarRecomendaciones
 import com.appclass.myapplication.ui.components.barraNavegacion.NavItem
 import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.RecomendacionViewModel
@@ -16,6 +18,7 @@ import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRe
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion2
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion3
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.create.CrearRecomendacion4
+import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.editar.EditarRecomendaciones
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.listar.ListarRecomendaciones
 import com.appclass.myapplication.ui.screens.prueba.MapOnlyScreen
 import com.appclass.myapplication.ui.screens.cambioVistasSwitch.Auth
@@ -256,6 +259,7 @@ fun NavigationWrapper (navController: NavHostController) {
         }
         composable(AppScreens.ListarRecomendaciones.ruta) {
             ListarRecomendaciones(
+                navController,
                 viewModel = recomendacionViewModel,
                 onBack = {
                     navController.popBackStack()
@@ -263,7 +267,40 @@ fun NavigationWrapper (navController: NavHostController) {
             )
         }
 
+//        composable("editarRecomendacion/{recJson}") { backStackEntry ->
+//            val json = backStackEntry.arguments?.getString("recJson") ?: ""
+//            val recomendacion = Gson().fromJson(json, UserRecomendation::class.java)
+//            EditarRecomendaciones(
+//                recomendacion = recomendacion,
+//                viewModel = recomendacionViewModel,
+//                onBack = { navController.popBackStack() }
+//            )
+//        }
+//        composable("editarRecomendacion/{recJson}",
+//            arguments = listOf(navArgument("recJson") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val json = backStackEntry.arguments?.getString("recJson")
+//
+//            if (json.isNullOrEmpty()) {
+//                Log.e("Navigation", "❌ recJson está vacío o es nulo")
+//                return@composable
+//            }
+//
+//            try {
+//                val recomendacion = Gson().fromJson(json, UserRecomendation::class.java)
+//
+//                EditarRecomendaciones(
+//                    recomendacion = recomendacion,
+//                    viewModel = recomendacionViewModel,
+//                    onBack = { navController.popBackStack() }
+//                )
+//            } catch (e: Exception) {
+//                Log.e("Navigation", "❌ Error al parsear recJson: ${e.message}")
+//            }
+//        }
+
 
 
     }
 }
+

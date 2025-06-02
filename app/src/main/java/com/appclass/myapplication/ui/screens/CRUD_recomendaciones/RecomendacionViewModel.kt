@@ -262,4 +262,16 @@ class RecomendacionViewModel: ViewModel() {
             .addOnFailureListener { onError(it) }
     }
 
+    fun editarRecomendacion(
+        recomendation: UserRecomendation,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ){
+        db.collection("user_recomendaciones")
+            .document(recomendation.id)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
 }

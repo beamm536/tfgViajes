@@ -1,7 +1,9 @@
 package com.appclass.myapplication.ui.screens.CRUD_recomendaciones.listar
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,11 +28,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.appclass.myapplication.data.recomendaciones.UserRecomendation
+import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.RecomendacionViewModel
+import com.google.gson.Gson
 
 @Composable
 fun ListarRecomendaciones(
+    navController: NavController,
     viewModel: RecomendacionViewModel = viewModel(),
     onBack: () -> Unit
 ){
@@ -81,7 +87,7 @@ fun ListarRecomendaciones(
 //                        }
 //                    }
 //                }
-                RecomendacionCard(rec = rec, viewModel = viewModel)
+                RecomendacionCard(rec = rec, viewModel = viewModel, navController)
             }
         }
 
@@ -98,7 +104,8 @@ fun ListarRecomendaciones(
 @Composable
 fun RecomendacionCard(
     rec: UserRecomendation,
-    viewModel: RecomendacionViewModel
+    viewModel: RecomendacionViewModel,
+    navController: NavController
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -146,8 +153,20 @@ fun RecomendacionCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedButton(onClick = { showDialog = true }) {
-                Text("Eliminar")
+            Row {
+                OutlinedButton(
+                    onClick = {
+                        val json = Uri.encode(Gson().toJson(rec))
+                        navController.navigate(AppScreens.EditarRecomendaciones.createRoute(json))
+                    },
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Text("Editar")
+                }
+
+                OutlinedButton(onClick = { showDialog = true }) {
+                    Text("Eliminar")
+                }
             }
         }
     }
