@@ -79,7 +79,8 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Color(0xFFF0FAF6)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -88,7 +89,7 @@ fun Registro(viewModel: RegistroViewModel, navigateToHome: () -> Unit, switcher:
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(text = "Iniciar sesión")
+            //Text(text = "Iniciar sesión")
 
             //las llamadas al resto de funciones las haremos en FuncionesLogin
             FuncionesRegistro(
@@ -216,7 +217,7 @@ fun CamposRegistro(
         OutlinedTextField(
             value = password,
             onValueChange = { onPasswordChanged(it) },
-            label = { Text("Password") },
+            label = { Text("Contraseña") },
             shape = RoundedCornerShape(12.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),

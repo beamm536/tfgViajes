@@ -70,6 +70,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 
 //---------------
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlacesRecomendacionesScreen(
     navController: NavHostController,
@@ -227,6 +228,46 @@ fun PlacesRecomendacionesScreen(
 //
 //    }
     Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.height(110.dp),
+                title = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.primerlogo_app_removebg_preview),
+                            contentDescription = "App logo",
+                            modifier = Modifier
+                                .size(56.dp)
+                                .padding(end = 12.dp),
+                            tint = Color.Unspecified
+                        )
+
+                        Column {
+                            Text(
+                                text = "Explora el mundo a tu alrededor",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = Poppins
+                            )
+                            Text(
+                                text = saludo,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontFamily = Poppins,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = Color.Unspecified
+                )
+            )
+        },
         containerColor = Color(0xFFF0FAF6),
         bottomBar = {
             BottomNavBar(navController = navController, viewModel = navigationViewModel)
@@ -243,9 +284,14 @@ fun PlacesRecomendacionesScreen(
                 }
 
                 places.isNotEmpty() -> {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(" $saludo", style = MaterialTheme.typography.headlineSmall)
-                        Text("🌍 Explora el mundo a tu alrededor", style = MaterialTheme.typography.titleMedium)
+
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        //Text(" $saludo", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 12.dp))
+                        //Text("🌍 Explora el mundo a tu alrededor", style = MaterialTheme.typography.titleMedium)
                         Text(
                             text = "Estas son nuestras recomendaciones cerca de ti",
                             style = MaterialTheme.typography.bodyMedium,
@@ -313,6 +359,9 @@ fun PlaceCardGrid(
     navController: NavHostController,
     onFavoriteClick: () -> Unit
 ) {
+
+    val lightBlue = Color(0xFFAEE6F4)//0xFFADDDF0
+
     val bgColor = if (place.isFavourite)
         MaterialTheme.colorScheme.primaryContainer
     else
@@ -326,7 +375,8 @@ fun PlaceCardGrid(
                 navController.navigate("placeDetail/${place.placeId}")
             },
         elevation = CardDefaults.cardElevation(6.dp),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = lightBlue)
     ) {
         Column {
             place.photoUrl?.let { url ->

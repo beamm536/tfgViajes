@@ -212,6 +212,7 @@ class RecomendacionViewModel: ViewModel() {
             createdAt = System.currentTimeMillis()
         )
 
+        Log.d("🔥 CREACION", "isPublic actual: ${_isPublic.value}")
         db.collection("user_recomendaciones")
             .document(recommendation.id)
             .set(recommendation)
@@ -241,6 +242,48 @@ class RecomendacionViewModel: ViewModel() {
             .addOnFailureListener { e ->
                 onError(e)
             }
+    }
+
+    fun eliminarRecomendacion(
+        id: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val userId = auth.currentUser?.uid ?: "debug-user"
+        //val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            onError(Exception("No estás logueado"))
+            return
+        }
+
+        db.collection("user_recomendaciones")
+            .document(id)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+    fun editarRecomendacion(
+        recomendation: UserRecomendation,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ){
+        db.collection("user_recomendaciones")
+            .document(recomendation.id)
+            .set(recomendation) //sobrescribimos el documento
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+
+    //comprobacion de los campos, para un correcto guardado de los mismos
+    fun resetCampos() {
+        _title.value = ""
+        _description.value = ""
+        _locationName.value = ""
+        _latLng.value = null
+        _category.value = ""
+        _isPublic.value = true // o false si prefieres privado por defecto
     }
 
 }
