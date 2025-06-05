@@ -39,6 +39,13 @@ sealed class AppScreens(val ruta: String) {
 
     //EDITAR RECOMENDACIONES
     object EditarRecomendaciones : AppScreens("editarRecomendacion/{recJson}"){
-        fun createRoute(recJson: String) = "editarRecomendacion/$recJson"
+        fun createRoute(recJson: String): String = "editarRecomendacion/$recJson"
+        const val RUTA_BASE = "editarRecomendacion"
+        //fun createRoute(recJson: String) = "editarRecomendacion/$recJson"
+    }
+
+    //DETALLE RECOMENDACIONES - al pulsar en la lista de recomendaciones creadas
+    object DetalleRecomendacionesPersonalizadas : AppScreens("detalleRecomendacion/{recJson}") {
+        fun createRoute(recJson: String) = "detalleRecomendacion/$recJson"
     }
 }

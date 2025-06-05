@@ -212,6 +212,7 @@ class RecomendacionViewModel: ViewModel() {
             createdAt = System.currentTimeMillis()
         )
 
+        Log.d("🔥 CREACION", "isPublic actual: ${_isPublic.value}")
         db.collection("user_recomendaciones")
             .document(recommendation.id)
             .set(recommendation)
@@ -269,9 +270,20 @@ class RecomendacionViewModel: ViewModel() {
     ){
         db.collection("user_recomendaciones")
             .document(recomendation.id)
-            .delete()
+            .set(recomendation) //sobrescribimos el documento
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onError(it) }
+    }
+
+
+    //comprobacion de los campos, para un correcto guardado de los mismos
+    fun resetCampos() {
+        _title.value = ""
+        _description.value = ""
+        _locationName.value = ""
+        _latLng.value = null
+        _category.value = ""
+        _isPublic.value = true // o false si prefieres privado por defecto
     }
 
 }

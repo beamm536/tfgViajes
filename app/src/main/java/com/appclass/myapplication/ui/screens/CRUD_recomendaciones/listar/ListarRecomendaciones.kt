@@ -2,6 +2,7 @@ package com.appclass.myapplication.ui.screens.CRUD_recomendaciones.listar
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,9 +42,10 @@ fun ListarRecomendaciones(
     viewModel: RecomendacionViewModel = viewModel(),
     onBack: () -> Unit
 ){
+    val refreshTrigger = remember { mutableStateOf(0) }
     val recommendations = viewModel.userRecommendations
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(refreshTrigger.value/*Unit*/) {
         viewModel.listarRecomendacion {
             Log.e("Firestore", "❌ Error al cargar: ${it.message}")
         }
@@ -55,38 +58,6 @@ fun ListarRecomendaciones(
 
         LazyColumn {
             items(recommendations) { rec ->
-//                Card(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(vertical = 8.dp),
-//                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-//                ) {
-//                    Column(modifier = Modifier.padding(16.dp)) {
-//                        Text(text = rec.title, fontSize = 18.sp)
-//                        Text(text = rec.category, style = MaterialTheme.typography.bodySmall)
-//                        Text(text = rec.locationName, style = MaterialTheme.typography.bodySmall)
-//
-//                        Spacer(modifier = Modifier.height(8.dp))
-//
-//                        OutlinedButton(
-//                            onClick = {
-//                                viewModel.eliminarRecomendacion(
-//                                    id = rec.id,
-//                                    onSuccess = {
-//                                        viewModel.listarRecomendacion {
-//                                            Log.e("Firestore", "🔁 Error al recargar: ${it.message}")
-//                                        }
-//                                    },
-//                                    onError = {
-//                                        Log.e("Firestore", "❌ Error al eliminar: ${it.message}")
-//                                    }
-//                                )
-//                            }
-//                        ) {
-//                            Text("Eliminar")
-//                        }
-//                    }
-//                }
                 RecomendacionCard(rec = rec, viewModel = viewModel, navController)
             }
         }
@@ -100,6 +71,98 @@ fun ListarRecomendaciones(
 }
 
 
+
+//@Composable
+//fun RecomendacionCard(
+//    rec: UserRecomendation,
+//    viewModel: RecomendacionViewModel,
+//    navController: NavController
+//) {
+//    var showDialog by remember { mutableStateOf(false) }
+//
+//    if (showDialog) {
+//        AlertDialog(
+//            onDismissRequest = { showDialog = false },
+//            title = { Text("¿Eliminar recomendación?") },
+//            text = { Text("Esta acción no se puede deshacer.") },
+//            confirmButton = {
+//                TextButton(onClick = {
+//                    showDialog = false
+//                    viewModel.eliminarRecomendacion(
+//                        id = rec.id,
+//                        onSuccess = {
+//                            viewModel.listarRecomendacion {
+//                                Log.e("Firestore", "🔁 Error al recargar: ${it.message}")
+//                            }
+//                        },
+//                        onError = {
+//                            Log.e("Firestore", "❌ Error al eliminar: ${it.message}")
+//                        }
+//                    )
+//                }) {
+//                    Text("Sí, eliminar")
+//                }
+//            },
+//            dismissButton = {
+//                TextButton(onClick = { showDialog = false }) {
+//                    Text("Cancelar")
+//                }
+//            }
+//        )
+//    }
+//
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 8.dp)
+//            .clickable {
+//                val json = Uri.encode(Gson().toJson(rec))
+//                navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
+//            },
+//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+//    ) {
+//        Column(modifier = Modifier.padding(16.dp)) {
+//            Text(
+//                text = rec.title,
+//                fontSize = 18.sp,
+//                modifier = Modifier
+//                    .clickable{
+//                        val json = Uri.encode(Gson().toJson(rec))
+//                        /*
+//                        GSON().TOJSON(REC)
+//                        recibir la recomendacion en formato json para luego una mejor manipulación de los datos
+//
+//                        URI-ENCODE
+//                        traduce esos caracteres a una forma segura para pasarlos por una ruta de navegación,
+//                        para que no se rompa lal url si los mandamos directamente
+//                         */
+//                        navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
+//                    }
+//
+//            )
+//            Text(text = rec.category, style = MaterialTheme.typography.bodySmall)
+//            Text(text = rec.locationName, style = MaterialTheme.typography.bodySmall)
+//
+//            Spacer(modifier = Modifier.height(8.dp))
+//
+//            Row {
+//                OutlinedButton(
+//                    onClick = {
+//                        val json = Uri.encode(Gson().toJson(rec))
+//                        navController.navigate(AppScreens.EditarRecomendaciones.createRoute(json))
+//                    },
+//                    modifier = Modifier.padding(end = 8.dp)
+//                ) {
+//                    Text("Editar")
+//                }
+//
+//                OutlinedButton(onClick = { showDialog = true }) {
+//                    Text("Eliminar")
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun RecomendacionCard(
@@ -143,30 +206,65 @@ fun RecomendacionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(vertical = 8.dp)
+            .clickable {
+                val json = Uri.encode(Gson().toJson(rec))
+                navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
+            },
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = rec.title, fontSize = 18.sp)
+            Text(
+                text = rec.title,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .clickable {
+                        val json = Uri.encode(Gson().toJson(rec))
+                        navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
+                    },
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             Text(text = rec.category, style = MaterialTheme.typography.bodySmall)
             Text(text = rec.locationName, style = MaterialTheme.typography.bodySmall)
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
                 OutlinedButton(
                     onClick = {
                         val json = Uri.encode(Gson().toJson(rec))
                         navController.navigate(AppScreens.EditarRecomendaciones.createRoute(json))
                     },
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
                 ) {
                     Text("Editar")
                 }
 
-                OutlinedButton(onClick = { showDialog = true }) {
+                OutlinedButton(
+                    onClick = { showDialog = true },
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text("Eliminar")
                 }
+
+                Spacer(modifier = Modifier.weight(0.1f))
+
+//                Text(
+//                    text = if (rec.isPublic) "🌐 Pública" else "🔒 Privada",
+//                    fontSize = 12.sp,
+//                    modifier = Modifier.padding(start = 8.dp),
+//                    color = if (rec.isPublic) Color(0xFF5198ED) else Color(0xFF346298)
+//                )
             }
         }
     }

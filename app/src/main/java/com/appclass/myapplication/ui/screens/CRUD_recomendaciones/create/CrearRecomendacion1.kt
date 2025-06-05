@@ -51,6 +51,12 @@ fun CrearRecomendacion1(
     viewModel: RecomendacionViewModel = viewModel(),
     onNext: () -> Unit
 ){
+
+    LaunchedEffect(Unit) {
+        viewModel.resetCampos()  //reinicio de los campos
+    }
+
+
     val title by viewModel.title
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
