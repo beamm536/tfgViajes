@@ -42,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import com.appclass.myapplication.R
 
 //vista para la localizacion de la recomendacion - vista3
@@ -151,6 +152,7 @@ import com.appclass.myapplication.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrearRecomendacion3(
+    navController: NavController,
     viewModel: RecomendacionViewModel = viewModel(),
     onNext: () -> Unit,
     onBack: () -> Unit

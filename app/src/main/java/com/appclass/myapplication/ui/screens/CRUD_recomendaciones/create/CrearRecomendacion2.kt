@@ -38,12 +38,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import com.appclass.myapplication.R
 
 //vista para la descripcion de la recomendacion - vista2
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrearRecomendacion2 (
+    navController: NavController,
     viewModel: RecomendacionViewModel = viewModel(),
     onNext: () -> Unit,
     onBack: () -> Unit

@@ -41,6 +41,10 @@ import com.appclass.myapplication.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
+import androidx.compose.material3.Scaffold
+import androidx.navigation.NavController
+import com.appclass.myapplication.ui.components.barraNavegacion.BottomNavBar
+
 //import androidx.compose.ui.Alignment
 
 
@@ -48,6 +52,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldC
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrearRecomendacion1(
+    navController: NavController,
     viewModel: RecomendacionViewModel = viewModel(),
     onNext: () -> Unit
 ){
@@ -60,7 +65,15 @@ fun CrearRecomendacion1(
     val title by viewModel.title
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        containerColor = Color(0xFFF0FAF6),
+        bottomBar = {
+            BottomNavBar(navController = navController, viewModel = viewModel())
+        }
+    ) { innerPadding ->
+
+
+    Box(modifier = Modifier.fillMaxSize() .padding(innerPadding)) {
         // Imagen de fondo con opacidad del 50%
         Image(
             painter = painterResource(id = R.drawable.fondo), // Asegúrate de que este nombre coincida
@@ -162,4 +175,5 @@ fun CrearRecomendacion1(
             }
         }
     }
+}
 }

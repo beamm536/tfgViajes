@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -66,7 +67,7 @@ fun NavigationWrapper (navController: NavHostController) {
 
     //val mapBoxViewModel: MapBoxViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppScreens.ListarRecomendaciones.ruta){ //PlacesRecomendacionesScreen
+    NavHost(navController = navController, startDestination = AppScreens.PlacesRecomendacionesScreen.ruta){ //PlacesRecomendacionesScreen
 
         composable(AppScreens.Auth.ruta){
             Auth(
@@ -213,6 +214,7 @@ fun NavigationWrapper (navController: NavHostController) {
         //VISTAS PARA LA CREACION DE LAS RECOMENDACIONES
         composable (AppScreens.CrearRecomendacion1.ruta){
             CrearRecomendacion1 (
+                navController = navController,
                 viewModel = recomendacionViewModel,
                 onNext = {
                     navController.navigate(AppScreens.CrearRecomendacion2.ruta)
@@ -222,6 +224,7 @@ fun NavigationWrapper (navController: NavHostController) {
         }
         composable (AppScreens.CrearRecomendacion2.ruta){
             CrearRecomendacion2 (
+                navController = navController,
                 viewModel = recomendacionViewModel,
                 onNext = {
                     navController.navigate(AppScreens.CrearRecomendacion3.ruta)
@@ -234,6 +237,7 @@ fun NavigationWrapper (navController: NavHostController) {
         }
         composable (AppScreens.CrearRecomendacion3.ruta){
             CrearRecomendacion3 (
+                navController = navController,
                 viewModel = recomendacionViewModel,
                 onNext = {
                     navController.navigate(AppScreens.CrearRecomendacion4.ruta)
@@ -287,6 +291,7 @@ fun NavigationWrapper (navController: NavHostController) {
             }
 
             EditarRecomendaciones(
+                navController,
                 recomendacion = recomendacion,
                 viewModel = recomendacionViewModel,
                 onBack = { navController.popBackStack() }
