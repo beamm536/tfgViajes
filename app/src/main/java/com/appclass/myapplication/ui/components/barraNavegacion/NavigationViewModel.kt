@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModel
  * - fun onItemSelected, actualiza el estado del item que ha sido seleccionado (el boton del navbar que hemos tocado)
  */
 class NavigationViewModel : ViewModel() {
-    private val _iconoSeleccionado = mutableStateOf<NavItem>(NavItem.Search) //CAMBIAR DE ICONO AL DE HOME PARA QUE EL NAVBAR EMPIECE EN HOME
+    private val _iconoSeleccionado = mutableStateOf<NavItem>(NavItem.Home) //CAMBIAR DE ICONO AL DE HOME PARA QUE EL NAVBAR EMPIECE EN HOME
     val iconoSeleccionado: State<NavItem> = _iconoSeleccionado
 
     fun onItemSelected(item: NavItem) {

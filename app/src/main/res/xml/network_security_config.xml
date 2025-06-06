@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.0.35</domain>
+    </domain-config>
+</network-security-config>
+<!--    Este archivo le dice a Android que permita tráfico HTTP (cleartext) a esa IP específica.-->

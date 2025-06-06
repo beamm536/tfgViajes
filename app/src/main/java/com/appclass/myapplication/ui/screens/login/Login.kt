@@ -68,7 +68,8 @@ fun Login(navController: NavController, viewModel: LoginViewModel, switcher: @Co
 
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Color(0xFFF0FAF6) //
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -77,7 +78,7 @@ fun Login(navController: NavController, viewModel: LoginViewModel, switcher: @Co
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(text = "Iniciar sesión")
+           // Text(text = "Iniciar sesión")
 
             //las llamadas al resto de funciones las haremos en FuncionesLogin
             FuncionesLogin(
@@ -105,7 +106,7 @@ fun LogoAppLogin(modifier: Modifier){
 @Composable
 fun TxtsInicio(){
     Text(
-        text = "Welcome Back!",
+        text = "Bienvenido de nuevo!",
         fontSize = 32.sp,
         fontFamily = Poppins,
         fontWeight = FontWeight.Bold,
@@ -130,11 +131,11 @@ fun LoginBodyScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            //.fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        //Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -148,7 +149,7 @@ fun LoginBodyScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { onPasswordChanged(it) },
-            label = { Text("Password") },
+            label = { Text("Contraseña") },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -167,7 +168,7 @@ fun LoginBodyScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         ClickableText(
-            text = AnnotatedString("Forgot Password ?"),
+            text = AnnotatedString("Has olvidado tu contraseña ?"),
             onClick = {},
             modifier = Modifier.align(Alignment.End)
         )
@@ -245,7 +246,7 @@ fun LoginBodyScreen(
                     modifier = Modifier
                         .size(20.dp)
                 )
-                Text("Continue with Google", color = txtBlack)
+                Text("Continuar con Google", color = txtBlack)
             }
 
         }
@@ -269,6 +270,7 @@ fun FuncionesLogin(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
+       // Spacer(modifier = Modifier.size(1.dp))
         LogoAppLogin(modifier = Modifier)
         TxtsInicio()
         /** SWITCH --> CON VARIABLES COMPARTIDAS - AUTHVIEWMODEL */

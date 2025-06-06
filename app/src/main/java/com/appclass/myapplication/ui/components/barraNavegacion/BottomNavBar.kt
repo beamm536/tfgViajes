@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 /**
  * UI de nuestro componente bottombar
@@ -21,7 +22,12 @@ import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
 fun BottomNavBar(navController: NavController, viewModel: NavigationViewModel) {
-    val selectedItem by viewModel.iconoSeleccionado
+    //val selectedItem by viewModel.iconoSeleccionado
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    //val currentroute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry?.destination?.route)
 
     val items = listOf(
         NavItem.Home,
@@ -41,7 +47,7 @@ fun BottomNavBar(navController: NavController, viewModel: NavigationViewModel) {
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                selected = item == selectedItem,
+                selected = item.route == currentRoute/*selectedItem*/,
                 onClick = {
                     viewModel.onItemSelected(item)
                     navController.navigate(item.route) {

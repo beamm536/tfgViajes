@@ -1,12 +1,14 @@
 package com.appclass.myapplication.ui.components.barraNavegacion
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.appclass.myapplication.navigation.AppScreens
 
 /**
  * SEALED CLASS --> para modelar los estados finitos / posibles estados, que nos podemos encontrar como resultado de una operación
@@ -23,9 +25,12 @@ sealed class NavItem (
     val icon: ImageVector,
     val label: String
 ) {
-    object Home : NavItem("home", Icons.Default.Home, "Inicio")
+    //object Home : NavItem("home", Icons.Default.Home, "Inicio")
+    object Home : NavItem(AppScreens.PlacesRecomendacionesScreen.ruta, Icons.Default.Home, "Inicio")
+    //object Home : NavItem("PlacesRecomendacionesScreen", Icons.Default.Home, "Inicio")
     object Search : NavItem("mapbox", Icons.Default.Search, "Buscar")
-    object Map : NavItem("map", Icons.Default.Place, "Mapa")
-    object Chat : NavItem("chat", Icons.Default.List, "Chat")
+    object Map : NavItem("CrearRecomendacion1", Icons.Default.Add, "Mapa")
+    //object Chat : NavItem("chat", Icons.Default.List, "Chat")
+    object Chat : NavItem("ListarRecomendaciones", Icons.Default.List, "Chat")
     object Profile : NavItem("usuario", Icons.Default.Person, "Perfil")
 }

@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--PERMISOS AÑADIDOS PARA EL CORRECTO FUNCIONAMEINTO DE LA API DE MAPBOX-->
+    <!--PERMISOS AÑADIDOS PARA EL CORRECTO FUNCIONAMEINTO DE LA API DE MAPBOX y para pillar las coordenadas reales del dispositivo
+    y asi poder basar las recomendaciones en funcion de dnd se encuentre el dispositivo - CONEXION CON tfgBackend -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/primerlogo_app_removebg_preview"
