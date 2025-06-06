@@ -128,11 +128,16 @@ fun AvatarNombreUsuario(user: User?) {
 @Composable
 fun EditProfileScreen(navController: NavController, user: User?, viewModel: EditarPerfilViewModel) {
 
-    val nombre = remember { mutableStateOf(user?.nombre ?: "") }
-    val apellidos = remember { mutableStateOf(user?.apellidos ?: "") }
-    val fechaNacimiento = remember { mutableStateOf(user?.fechaNacimiento ?: "") }
-    val genero = remember { mutableStateOf(user?.genero ?: "") }
-    val email = remember { mutableStateOf(user?.email ?: "") }
+    //val nombre = remember { mutableStateOf(user?.nombre ?: "") }
+    val nombre = remember(user){ mutableStateOf(user?.nombre ?: "")}
+    //val apellidos = remember { mutableStateOf(user?.apellidos ?: "") }
+    val apellidos = remember(user){ mutableStateOf(user?.apellidos ?: "")}
+    //val fechaNacimiento = remember { mutableStateOf(user?.fechaNacimiento ?: "") }
+    val fechaNacimiento = remember(user){ mutableStateOf(user?.fechaNacimiento ?: "")}
+    //val genero = remember { mutableStateOf(user?.genero ?: "") }
+    val genero = remember(user){ mutableStateOf(user?.genero ?: "")}
+    //val email = remember { mutableStateOf(user?.email ?: "") }
+    val email = remember(user){ mutableStateOf(user?.email ?: "")}
 
     Column(
         modifier = Modifier
@@ -194,7 +199,7 @@ fun ProfileTextField(label: String, value: String, /*trailingIcon: ImageVector? 
         Text(text = label, fontWeight = FontWeight.Bold)
         OutlinedTextField(
             value = value,
-            onValueChange = {}, // Deja esto por ahora como solo lectura
+            onValueChange = onValueChange, // Deja esto por ahora como solo lectura
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth()
         )
