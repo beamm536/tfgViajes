@@ -18,7 +18,7 @@ class BusquedasRecientesUser (private val context: Context){
     }
 
     // Leer el string (lista serializada)
-    val busquedasRecientes: Flow<List<String>> = context.userPrefsDataStore.data
+    val busquedasRecientes: Flow<List<String>> = context.dataStore.data
         .map { preferences ->
             preferences[BUSQUEDAS_KEY]?.split("||")?.filter { it.isNotBlank() } ?: emptyList()
         }
