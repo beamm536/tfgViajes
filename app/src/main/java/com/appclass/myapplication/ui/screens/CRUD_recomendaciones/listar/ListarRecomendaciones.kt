@@ -2,6 +2,7 @@ package com.appclass.myapplication.ui.screens.CRUD_recomendaciones.listar
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,6 +54,7 @@ import com.appclass.myapplication.ui.components.barraNavegacion.BottomNavBar
 import com.appclass.myapplication.ui.screens.CRUD_recomendaciones.RecomendacionViewModel
 import com.appclass.myapplication.ui.theme.Poppins
 import com.google.gson.Gson
+import com.appclass.myapplication.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,12 +114,37 @@ fun ListarRecomendaciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                items(recommendations) { rec ->
-                    RecomendacionCard(rec = rec, viewModel = viewModel, navController)
+            if (recommendations.isEmpty()) {
+                // Mostrar imagen y mensaje cuando no hay recomendaciones
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.no_result), // Usa tu imagen
+                        contentDescription = "Sin recomendaciones",
+                        modifier = Modifier.size(200.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "No tienes recomendaciones aún.",
+                        fontSize = 18.sp,
+                        fontFamily = Poppins
+                    )
+                }
+            } else {
+
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(recommendations) { rec ->
+                        RecomendacionCard(rec = rec, viewModel = viewModel, navController)
+                    }
                 }
             }
 
@@ -131,97 +159,6 @@ fun ListarRecomendaciones(
 
 
 
-//@Composable
-//fun RecomendacionCard(
-//    rec: UserRecomendation,
-//    viewModel: RecomendacionViewModel,
-//    navController: NavController
-//) {
-//    var showDialog by remember { mutableStateOf(false) }
-//
-//    if (showDialog) {
-//        AlertDialog(
-//            onDismissRequest = { showDialog = false },
-//            title = { Text("¿Eliminar recomendación?") },
-//            text = { Text("Esta acción no se puede deshacer.") },
-//            confirmButton = {
-//                TextButton(onClick = {
-//                    showDialog = false
-//                    viewModel.eliminarRecomendacion(
-//                        id = rec.id,
-//                        onSuccess = {
-//                            viewModel.listarRecomendacion {
-//                                Log.e("Firestore", "🔁 Error al recargar: ${it.message}")
-//                            }
-//                        },
-//                        onError = {
-//                            Log.e("Firestore", "❌ Error al eliminar: ${it.message}")
-//                        }
-//                    )
-//                }) {
-//                    Text("Sí, eliminar")
-//                }
-//            },
-//            dismissButton = {
-//                TextButton(onClick = { showDialog = false }) {
-//                    Text("Cancelar")
-//                }
-//            }
-//        )
-//    }
-//
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp)
-//            .clickable {
-//                val json = Uri.encode(Gson().toJson(rec))
-//                navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
-//            },
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-//    ) {
-//        Column(modifier = Modifier.padding(16.dp)) {
-//            Text(
-//                text = rec.title,
-//                fontSize = 18.sp,
-//                modifier = Modifier
-//                    .clickable{
-//                        val json = Uri.encode(Gson().toJson(rec))
-//                        /*
-//                        GSON().TOJSON(REC)
-//                        recibir la recomendacion en formato json para luego una mejor manipulación de los datos
-//
-//                        URI-ENCODE
-//                        traduce esos caracteres a una forma segura para pasarlos por una ruta de navegación,
-//                        para que no se rompa lal url si los mandamos directamente
-//                         */
-//                        navController.navigate(AppScreens.DetalleRecomendacionesPersonalizadas.createRoute(json))
-//                    }
-//
-//            )
-//            Text(text = rec.category, style = MaterialTheme.typography.bodySmall)
-//            Text(text = rec.locationName, style = MaterialTheme.typography.bodySmall)
-//
-//            Spacer(modifier = Modifier.height(8.dp))
-//
-//            Row {
-//                OutlinedButton(
-//                    onClick = {
-//                        val json = Uri.encode(Gson().toJson(rec))
-//                        navController.navigate(AppScreens.EditarRecomendaciones.createRoute(json))
-//                    },
-//                    modifier = Modifier.padding(end = 8.dp)
-//                ) {
-//                    Text("Editar")
-//                }
-//
-//                OutlinedButton(onClick = { showDialog = true }) {
-//                    Text("Eliminar")
-//                }
-//            }
-//        }
-//    }
-//}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecomendacionCard(

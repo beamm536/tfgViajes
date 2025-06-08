@@ -15,14 +15,14 @@ object RetrofitClient {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.0.35:8000/")  // <-- importante para emulador Android  10.0.2.2 (esto si el backend estuviera en el mismo ordenador)
-       // .baseUrl("http://193.146.59.44:8000/")
-        //.baseUrl("http://192.168.0.173:8000/")
+        .baseUrl("http://192.168.0.35:8000/")
+        //.baseUrl("https://tfgbackend-hypb.onrender.com/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
 
     val apiService: PlacesRecomendacionesApiService = retrofit.create(
-        PlacesRecomendacionesApiService::class.java)
+        PlacesRecomendacionesApiService::class.java
+    )
 
 }
