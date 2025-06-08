@@ -71,6 +71,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.appclass.myapplication.R
 import com.appclass.myapplication.models.Favorito
+import com.appclass.myapplication.models.User
 import com.appclass.myapplication.navigation.AppScreens
 import com.appclass.myapplication.ui.components.barraNavegacion.BottomNavBar
 import com.appclass.myapplication.ui.components.barraNavegacion.NavigationViewModel
@@ -144,8 +145,15 @@ fun Usuario(navController: NavHostController, viewModel: UsuarioViewModel){
 }
 
 @Composable
-fun AvatarPerfilUsuario(modifier: Modifier, navController: NavController, nombreUsuario: String){
+fun AvatarPerfilUsuario(user: User?,modifier: Modifier, navController: NavController, nombreUsuario: String){
 
+    val genero = user?.genero?.lowercase() ?: ""
+    val imgAvatar = when (genero) {
+        "masculino" -> R.drawable.male_avatar
+        "femenino" -> R.drawable.female_avatar
+        "otro" -> R.drawable.other_avatar
+        else -> R.drawable.other_avatar
+    }
 
     Box(
         modifier = Modifier
@@ -155,7 +163,7 @@ fun AvatarPerfilUsuario(modifier: Modifier, navController: NavController, nombre
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.avatar),
+            painter = painterResource(id = imgAvatar),
             contentDescription = "Avatar",
             modifier = Modifier
                 .size(120.dp)
@@ -195,7 +203,7 @@ fun AvatarPerfilUsuario(modifier: Modifier, navController: NavController, nombre
                 Text(text = "Madrid")
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Sports ⚾ & Fortnite 🎮", color = Color.Gray)
+            //Text(text = "Sports ⚾ & Fortnite 🎮", color = Color.Gray)
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -213,6 +221,7 @@ fun AvatarPerfilUsuario(modifier: Modifier, navController: NavController, nombre
 @Composable
 fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel, navController: NavController){
 
+    val user by viewModel.usuario.collectAsState()
     val nombreUsuario by viewModel.nombreUsuario.collectAsState()
     val favoritos by viewModel.favoritos.collectAsState()
 
@@ -225,7 +234,7 @@ fun FuncionesPerfilUsuario(viewModel: UsuarioViewModel, navController: NavContro
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        AvatarPerfilUsuario(modifier = Modifier, navController, nombreUsuario = nombreUsuario)
+        AvatarPerfilUsuario(user = user, modifier = Modifier, navController, nombreUsuario = nombreUsuario)
 
 
 //        if (favoritos.isNotEmpty()) {

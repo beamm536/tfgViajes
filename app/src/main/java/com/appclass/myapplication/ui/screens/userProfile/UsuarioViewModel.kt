@@ -2,6 +2,7 @@ package com.appclass.myapplication.ui.screens.userProfile
 
 import androidx.lifecycle.ViewModel
 import com.appclass.myapplication.models.Favorito
+import com.appclass.myapplication.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,9 @@ class UsuarioViewModel: ViewModel(){
 
     private val _nombreUsuario = MutableStateFlow("")
     val nombreUsuario: StateFlow<String> = _nombreUsuario
+
+    private val _usuario = MutableStateFlow<User?>(null)
+    val usuario: StateFlow<User?> = _usuario
 
     private val _favoritos = MutableStateFlow<List<Favorito>>(emptyList())
     val favoritos: StateFlow<List<Favorito>> = _favoritos
