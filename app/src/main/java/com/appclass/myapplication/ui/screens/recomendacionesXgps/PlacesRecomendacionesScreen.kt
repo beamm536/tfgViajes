@@ -311,7 +311,8 @@ fun PlacesRecomendacionesScreen(
                                     place = place,
                                     navController = navController,
                                     onFavoriteClick = {
-                                        place.placeId?.let { viewModel.favoritos(it) }
+                                        viewModel.toggleFavoritoFirestore(place)
+                                       // place.placeId?.let { viewModel.favoritos(it) }
                                     }
                                 )
                             }
