@@ -57,11 +57,19 @@ class LoginViewModel: ViewModel(){
         val passwordValue = _password.value ?: ""
 
         authRepository.iniciarSesion(emailValue, passwordValue) { success, errorMessage ->
+//            if (success) {
+//                Log.d("LoginViewModel", "Login exitoso para el usuario: $emailValue")
+//                afterLogin()
+//            } else {
+//                Log.e("LoginViewModel", "Error en el login: $errorMessage")
+//            }
             if (success) {
                 Log.d("LoginViewModel", "Login exitoso para el usuario: $emailValue")
                 afterLogin()
+                onLoginResult(true, "")
             } else {
                 Log.e("LoginViewModel", "Error en el login: $errorMessage")
+                onLoginResult(false, "Credenciales inválidas o usuario no encontrado.")
             }
         }
     }

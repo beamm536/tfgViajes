@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -128,6 +130,21 @@ fun LoginBodyScreen(
 
     val contextoApp = LocalContext.current
     var passwordVisible by remember { mutableStateOf(false) }
+    val showGoogleDialog = remember { mutableStateOf(false) }
+
+    if (showGoogleDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showGoogleDialog.value = false },
+            title = { Text("Próximamente Disponible 😉") },
+            text = { Text("La autenticación con Google estará disponible en una futura versión.") },
+            confirmButton = {
+                TextButton(onClick = { showGoogleDialog.value = false }) {
+                    Text("Vale")
+                }
+            }
+        )
+    }
+
 
     Column(
         modifier = Modifier
@@ -189,11 +206,20 @@ fun LoginBodyScreen(
                 viewModel.onLoginSelected(
                     afterLogin = onLoginSuccess,
                     onLoginResult = { success, message ->
-                        Toast.makeText(
-                            contextoApp,
-                            "El usuario se ha registrado correctamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (success) {
+                            Toast.makeText(
+                                contextoApp,
+                                "Inicio de sesión correcto",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                contextoApp,
+                                message ?: "Usuario no encontrado o credenciales incorrectas",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
                     }
                 )
             },
@@ -233,7 +259,7 @@ fun LoginBodyScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = {},
+            onClick = { showGoogleDialog.value = true },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(Color.White)
         ) {
