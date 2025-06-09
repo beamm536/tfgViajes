@@ -12,6 +12,14 @@ object RetrofitInstance {
     private const val BASE_URL = "https://api.mapbox.com/"
     private const val MAPBOX_TOKEN = "pk.eyJ1Ijoid2F4ZXI1OSIsImEiOiJjbDMzZHJiN2cwdDA1M2pwOXlkbzVhb3kxIn0.lXwAZCDn_G9GNKcxWzYE7g"  //token de hugo :)
 
+    /*
+     - se crea un cliente HTTP (okhttp) >>> que no se crea hasta que alguien use la variable por primera vez
+     EVITAMOS CARGA DE FUNCIONALIDADES AL ARRANCAR LA APP Y UN CRASHEO DE LA MISMA
+
+        - añade logs para la depuracion con --> HttpLoggingInterceptor
+        - añade la api-key como un parametro de la @Query
+        - devuelve el cliente para ser usadon por retrofit
+     */
     private val client by lazy{
         val logging = HttpLoggingInterceptor().apply{
             level = HttpLoggingInterceptor.Level.BODY

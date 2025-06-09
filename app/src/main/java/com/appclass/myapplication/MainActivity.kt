@@ -13,7 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.appclass.myapplication.navigation.AppScreens.PlacesRecomendacionesScreen
 import com.appclass.myapplication.navigation.NavigationWrapper
+import com.appclass.myapplication.ui.screens.permisos.SolicitudPermisosUbicacion
+import com.appclass.myapplication.ui.screens.recomendacionesXgps.PlacesRecomendacionesScreen
 import com.appclass.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {

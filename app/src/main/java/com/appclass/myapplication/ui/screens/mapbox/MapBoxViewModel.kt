@@ -5,7 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Nature
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Waves
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,10 +45,11 @@ class MapBoxViewModel(
     //LISTA DE FILTROS
     var filters by mutableStateOf(
         listOf(
-            Filter("Madrid", Icons.Default.Person),
-            Filter("Barcelona", Icons.Default.AccountCircle),
-            Filter("Galicia", Icons.Default.Home),
-            Filter("Cascada", Icons.Default.LocationOn)
+            Filter("Monumentos", Icons.Filled.LocationOn),
+            Filter("Parques", Icons.Filled.Nature),
+            Filter("Restaurantes", Icons.Filled.Restaurant),
+            Filter("Playas", Icons.Filled.Waves),
+            Filter("Compras", Icons.Filled.Store)
         )
     )
         private set

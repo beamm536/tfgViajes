@@ -88,6 +88,12 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
     val navigationViewModel: NavigationViewModel = viewModel()
 
 
+    LaunchedEffect(Unit) {
+        viewModel.busquedasRecientesFlow.collect {
+            println("🔍 Busquedas recientes emitidas: $it")
+        }
+    }
+
     Scaffold(
         containerColor = Color(0xFFF0FAF6),
         bottomBar = {
@@ -138,6 +144,7 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
                             viewModel.onQueryChanged(it)
                         },
                         onSearchClick = {
+                            viewModel.guardarBusquedaReciente(query)
                             viewModel.fetchGeocoding(query)
                         },
                         onFilterClick = {
@@ -180,174 +187,200 @@ fun MapBox(navController: NavController, viewModel: MapBoxViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //---------- para las busquedas recientes
-            if (busquedasRecientes.isNotEmpty()) { // llamada a la función que tenemos en el viewModel
-                Column {
-                    Text(
-                        text = "Búsquedas recientes:",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = Poppins,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(bottom = 80.dp)
+            ) {
 
-                    LazyRow(
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    ) {
-                        items(busquedasRecientes) { recent ->
-                            Button(
-                                onClick = {
-                                    query = recent
-                                    viewModel.onQueryChanged(recent)
-                                    viewModel.fetchGeocoding(recent)
-                                },
-                                modifier = Modifier.padding(end = 8.dp)
-                            ) {
-                                Text(
-                                    text = recent,
-                                    fontFamily = Poppins
-                                )
+                //---------- para las busquedas recientes
+                if (busquedasRecientes.isNotEmpty()) { // llamada a la función que tenemos en el viewModel
+                    //Column
+                    item {
+                        Text(
+                            text = "Búsquedas recientes:",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontFamily = Poppins,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+
+                    item {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(busquedasRecientes) { recent ->
+                                Button(
+                                    onClick = {
+                                        query = recent
+                                        viewModel.guardarBusquedaReciente(recent)
+                                        viewModel.onQueryChanged(recent)
+                                        viewModel.fetchGeocoding(recent)
+                                    },
+                                    modifier = Modifier.padding(end = 8.dp)
+                                ) {
+                                    Text(
+                                        text = recent,
+                                        fontFamily = Poppins
+                                    )
+                                }
                             }
                         }
                     }
+
+
                 }
 
-            }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                // Mapa
+                staticMapUrl?.let { url ->
+                    item {
+                        AsyncImage(
+                            model = url,
+                            contentDescription = "Mapa",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                }
 
-            // Mapa
-            staticMapUrl?.let { url ->
-                AsyncImage(
-                    model = url,
-                    contentDescription = "Mapa",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                        .padding(horizontal = 16.dp)
-                )
-            }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Resultados
-            LazyColumn(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
+                // Resultados
                 items(geocodingResult.value?.features ?: emptyList()) { feature ->
                     PlaceCard(feature.placeName) {
                         val lat = feature.center[1]
                         val lon = feature.center[0]
-                        val nombre = feature.placeName.replace("/", "_") // Evita fallos en la URL
+                        val nombre = feature.placeName.replace("/", "_")
                         navController.navigate(
                             AppScreens.DetalleMapa.createRoute(nombre, lat, lon)
                         )
                     }
                 }
-            }
-        }//cierre del column principal
-    }
-}
-@Composable
-fun PlaceCard(name: String, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { onClick() }
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(text = name, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Ubicación...", style = MaterialTheme.typography.bodySmall)
+//            LazyColumn(
+//                modifier = Modifier.padding(horizontal = 16.dp)
+//            ) {
+//                items(geocodingResult.value?.features ?: emptyList()) { feature ->
+//                    PlaceCard(feature.placeName) {
+//                        val lat = feature.center[1]
+//                        val lon = feature.center[0]
+//                        val nombre = feature.placeName.replace("/", "_") // Evita fallos en la URL
+//                        navController.navigate(
+//                            AppScreens.DetalleMapa.createRoute(nombre, lat, lon)
+//                        )
+//                    }
+//                }
+//            }
+            }//cierre del column principal
         }
     }
 }
-
-@Composable
-fun SelectableCircleChip(
-    icon: ImageVector,
-    label: String,
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val borderColor = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
-    val textColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .padding(4.dp)
-            .clickable { onSelectedChange(!selected) }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
+    @Composable
+    fun PlaceCard(name: String, onClick: () -> Unit) {
+        Card(
             modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .border(2.dp, borderColor, CircleShape)
-                .padding(12.dp)
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable { onClick() }
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = textColor
-            )
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(text = name, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Ubicación...", style = MaterialTheme.typography.bodySmall)
+            }
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = label,
-            color = textColor,
-            fontFamily = Poppins,
-            style = MaterialTheme.typography.labelSmall,
-            textAlign = TextAlign.Center
-        )
     }
-}
 
+    @Composable
+    fun SelectableCircleChip(
+        icon: ImageVector,
+        label: String,
+        selected: Boolean,
+        onSelectedChange: (Boolean) -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        val borderColor = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
+        val textColor =
+            if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
 
-
-@Composable
-fun OutlinedCampoBusqueda(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearchClick: () -> Unit,
-    onFilterClick: () -> Unit
-) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        placeholder = {
-            Text(
-                "Buscar",
-                color = Color.Gray,
-                fontFamily = Poppins
-            )
-        },
-        singleLine = true,
-        trailingIcon = {
-            IconButton(onClick = onSearchClick) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .padding(4.dp)
+                .clickable { onSelectedChange(!selected) }
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, borderColor, CircleShape)
+                    .padding(12.dp)
+            ) {
                 Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Lupa de busqueda",
-                    tint = Color.Gray
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = textColor
                 )
             }
-        },
-        shape = RoundedCornerShape(16.dp),
-        colors = outlinedTextFieldColors(
-            unfocusedBorderColor = Color.Gray,
-            focusedBorderColor = Color.Gray,
-            cursorColor = Color.Gray,
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = label,
+                color = textColor,
+                fontFamily = Poppins,
+                style = MaterialTheme.typography.labelSmall,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .height(56.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(color = Color.White)
-    )
-}
+
+    @Composable
+    fun OutlinedCampoBusqueda(
+        query: String,
+        onQueryChange: (String) -> Unit,
+        onSearchClick: () -> Unit,
+        onFilterClick: () -> Unit
+    ) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            placeholder = {
+                Text(
+                    "Buscar",
+                    color = Color.Gray,
+                    fontFamily = Poppins
+                )
+            },
+            singleLine = true,
+            trailingIcon = {
+                IconButton(onClick = onSearchClick) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Lupa de busqueda",
+                        tint = Color.Gray
+                    )
+                }
+            },
+            shape = RoundedCornerShape(16.dp),
+            colors = outlinedTextFieldColors(
+                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Gray,
+                cursorColor = Color.Gray,
+
+                ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(56.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(color = Color.White)
+        )
+    }
+

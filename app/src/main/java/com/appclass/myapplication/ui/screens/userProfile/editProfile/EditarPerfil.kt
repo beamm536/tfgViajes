@@ -1,6 +1,8 @@
 package com.appclass.myapplication.ui.screens.userProfile.editProfile
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,20 +24,27 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -50,25 +59,139 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.appclass.myapplication.R
+import com.appclass.myapplication.models.Favorito
 import com.appclass.myapplication.models.User
 import com.appclass.myapplication.ui.screens.userProfile.FuncionesPerfilUsuario
 import com.appclass.myapplication.ui.theme.Poppins
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel) {
+
+    val context = LocalContext.current
+    val showDeleteDialog = remember { mutableStateOf(false) }
+
+    if (showDeleteDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog.value = false },
+            title = { Text("¿Eliminar cuenta?") },
+            text = { Text("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.eliminarCuenta { success, error ->
+                        if (success) {
+                            Toast.makeText(context, "Cuenta eliminada correctamente", Toast.LENGTH_SHORT).show()
+                            navController.navigate("login") { popUpTo(0) } // Ajusta según tu ruta
+                        } else {
+                            Toast.makeText(context, "Error: $error", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    showDeleteDialog.value = false
+                }) { Text("Sí") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog.value = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.cargarDatosUsuario()
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        topBar = {
+//            TopAppBar(
+//                modifier = Modifier.height(110.dp),
+//                title = {
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(16.dp),
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        horizontalArrangement = Arrangement.Center
+//                    ) {
+//                        IconButton(
+//                            onClick = { navController.popBackStack() }
+//                        ) {
+//                            Icon(
+//                                Icons.Default.KeyboardArrowLeft,
+//                                contentDescription = "Volver atrás"
+//                            )
+//                        }
+//
+//                        Text(
+//                            text = "Mi Perfil",
+//                            style = MaterialTheme.typography.titleLarge,
+//                            fontFamily = Poppins,
+//                            fontWeight = FontWeight.Bold
+//                        )
+//                    }
+//                },
+//                    actions = {
+//                        IconButton(onClick = {
+//                            FirebaseAuth.getInstance().signOut()
+//                            navController.navigate("login") { popUpTo(0) }
+//                        }) {
+//                            Icon(Icons.Default.Logout, contentDescription = "Logout")
+//                        }
+//                },
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = Color.Transparent,
+//                    titleContentColor = Color.Unspecified
+//                )
+//            )
+            TopAppBar(
+                modifier = Modifier.height(110.dp),
+                title = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        Text(
+                            text = "Mi Perfil",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.Center).padding(top = 8.dp)
+                        )
+                    }
+
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Volver atrás")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        FirebaseAuth.getInstance().signOut()
+                        navController.navigate("login") { popUpTo(0) }
+                    }) {
+                        Icon(Icons.Default.Logout, contentDescription = "Logout")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = Color.Unspecified
+                )
+            )
+
+        },
+        containerColor = Color(0xFFF0FAF6),
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -76,63 +199,79 @@ fun EditarPerfil(navController: NavController, viewModel: EditarPerfilViewModel)
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CenterAlignedTopAppBar(
-                title = { Text(text = "Editar Perfil") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Volver atrás")
-                    }
-                }
-            )
-            FuncionesEditarPerfilUsuario(viewModel, navController)
+            FuncionesEditarPerfilUsuario(viewModel, navController, showDeleteDialog)
         }
     }
 }
 
 @Composable
-fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController) {
+fun FuncionesEditarPerfilUsuario(viewModel: EditarPerfilViewModel, navController: NavController, showDeleteDialog: MutableState<Boolean>) {
 
     val user by viewModel.usuario.observeAsState()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F6F7))
+            .background(Color(0xFFF0FAF6))
             .systemBarsPadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item { AvatarNombreUsuario(user) }
-        item { EditProfileScreen(navController, user, viewModel) }
+        item { EditProfileScreen(navController, user, viewModel, showDeleteDialog) }
     }
 }
 
 @Composable
 fun AvatarNombreUsuario(user: User?) {
+    val genero = user?.genero?.lowercase() ?: ""
+
+    val imgAvatar = when (genero) {
+        "masculino" -> R.drawable.male_avatar
+        "femenino" -> R.drawable.female_avatar
+        "otro" -> R.drawable.other_avatar
+        else -> R.drawable.other_avatar
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Canvasusuario()
+        Image(
+            painter = painterResource(id = imgAvatar),
+            contentDescription = "avatar del usuario segun el genero escogido",
+            modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        //Canvasusuario()
         Spacer(modifier = Modifier.size(24.dp))
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = "${user?.nombre ?: ""} ${user?.apellidos ?: ""}",
                 fontSize = 20.sp
             )
-            Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Gray, modifier = Modifier.size(20.dp))
+            //Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Gray, modifier = Modifier.size(20.dp))
             Text(text = "📍 España", fontSize = 14.sp, color = Color.Gray) // o puedes guardar ciudad en Firestore si la tienes
         }
     }
 }
 
 @Composable
-fun EditProfileScreen(navController: NavController, user: User?, viewModel: EditarPerfilViewModel) {
+fun EditProfileScreen(navController: NavController, user: User?, viewModel: EditarPerfilViewModel, showDeleteDialog: MutableState<Boolean>) {
 
-    val nombre = remember { mutableStateOf(user?.nombre ?: "") }
-    val apellidos = remember { mutableStateOf(user?.apellidos ?: "") }
-    val fechaNacimiento = remember { mutableStateOf(user?.fechaNacimiento ?: "") }
-    val genero = remember { mutableStateOf(user?.genero ?: "") }
-    val email = remember { mutableStateOf(user?.email ?: "") }
+    //val nombre = remember { mutableStateOf(user?.nombre ?: "") }
+    val nombre = remember(user){ mutableStateOf(user?.nombre ?: "")}
+    //val apellidos = remember { mutableStateOf(user?.apellidos ?: "") }
+    val apellidos = remember(user){ mutableStateOf(user?.apellidos ?: "")}
+    //val fechaNacimiento = remember { mutableStateOf(user?.fechaNacimiento ?: "") }
+    val fechaNacimiento = remember(user){ mutableStateOf(user?.fechaNacimiento ?: "")}
+    //val genero = remember { mutableStateOf(user?.genero ?: "") }
+    val genero = remember(user){ mutableStateOf(user?.genero ?: "")}
+    //val email = remember { mutableStateOf(user?.email ?: "") }
+    val email = remember(user){ mutableStateOf(user?.email ?: "")}
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -162,11 +301,17 @@ fun EditProfileScreen(navController: NavController, user: User?, viewModel: Edit
                     email = email.value
                 )
                 viewModel.actualizarDatosUsuario(updatedUser) { success, error ->
+//                    if (success) {
+//                        println("Perfil actualizado correctamente")
+//                        // Muestra un mensaje o vuelve atrás si quieres
+//                    } else {
+//                        println("Error actualizando perfil: $error")
+//                    }
                     if (success) {
-                        println("Perfil actualizado correctamente")
-                        // Muestra un mensaje o vuelve atrás si quieres
+                        Toast.makeText(context, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
                     } else {
-                        println("Error actualizando perfil: $error")
+                        Toast.makeText(context, "Error al guardar: ${error}", Toast.LENGTH_LONG).show()
                     }
                 }
             },
@@ -178,11 +323,7 @@ fun EditProfileScreen(navController: NavController, user: User?, viewModel: Edit
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        TextButton(onClick = { /* Configuración */ }) {
-            Text(text = "Configuración de la cuenta", color = Color(0xFF4A90E2))
-        }
-
-        TextButton(onClick = { /* Eliminar cuenta */ }) {
+        TextButton(onClick = { showDeleteDialog.value = true }) {
             Text(text = "Eliminar cuenta", color = Color.Red)
         }
     }
@@ -194,7 +335,7 @@ fun ProfileTextField(label: String, value: String, /*trailingIcon: ImageVector? 
         Text(text = label, fontWeight = FontWeight.Bold)
         OutlinedTextField(
             value = value,
-            onValueChange = {}, // Deja esto por ahora como solo lectura
+            onValueChange = onValueChange, // Deja esto por ahora como solo lectura
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth()
         )
@@ -206,6 +347,11 @@ fun ProfileTextField(label: String, value: String, /*trailingIcon: ImageVector? 
 fun ProfileDropdown(label: String, initialValue: String = "", onValueChange: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(initialValue) }
+
+    //mantenemos el valor
+    LaunchedEffect(initialValue) {
+        selectedText = initialValue
+    }
 
     Column {
         Text(text = label, fontWeight = FontWeight.Bold)
@@ -227,14 +373,17 @@ fun ProfileDropdown(label: String, initialValue: String = "", onValueChange: (St
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(text = { Text("Masculino") }, onClick = {
                     selectedText = "Masculino"
+                    onValueChange("Masculino")
                     expanded = false
                 })
                 DropdownMenuItem(text = { Text("Femenino") }, onClick = {
                     selectedText = "Femenino"
+                    onValueChange("Femenino")
                     expanded = false
                 })
                 DropdownMenuItem(text = { Text("Otro") }, onClick = {
                     selectedText = "Otro"
+                    onValueChange("Otro")
                     expanded = false
                 })
             }
@@ -243,13 +392,13 @@ fun ProfileDropdown(label: String, initialValue: String = "", onValueChange: (St
     }
 }
 
-@Composable
-fun Canvasusuario() {
-    Canvas(modifier = Modifier.size(120.dp, 150.dp)) {
-        drawRoundRect(
-            color = Color.Gray,
-            size = Size(size.width, size.height),
-            cornerRadius = CornerRadius(100f, 100f)
-        )
-    }
-}
+//@Composable
+//fun Canvasusuario() {
+//    Canvas(modifier = Modifier.size(120.dp, 150.dp)) {
+//        drawRoundRect(
+//            color = Color.Gray,
+//            size = Size(size.width, size.height),
+//            cornerRadius = CornerRadius(100f, 100f)
+//        )
+//    }
+//}

@@ -125,4 +125,13 @@ dependencies {
     //material3
     implementation ("androidx.compose.material3:material3:1.3.2")
 
+    //iconos
+    implementation ("androidx.compose.material:material-icons-extended:1.3.2")
+
+    /**
+     * https://mvnrepository.com/artifact/com.google.android.gms/play-services-location/21.0.1
+     * A Google Play Services library for accessing the device's location using high-accuracy and battery-optimized APIs
+     */
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
 }
